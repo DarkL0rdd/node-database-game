@@ -15,3 +15,6 @@ app.get("/", (req, res) => {
 app.get("/echo", (req, res) => {
     res.status(200).send("Successful");
 });
+app.all("*", (req, res) => {
+    res.status(404).send("Error 404");
+});

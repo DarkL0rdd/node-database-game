@@ -13,3 +13,7 @@ app.get("/", (req: Request, res: Response) => {
 app.get("/echo", (req: Request, res: Response) => {
   res.status(200).send("Successful");
 });
+
+app.all("*", (req: Request, res: Response) => {
+  res.status(404).send("Error 404");
+});
