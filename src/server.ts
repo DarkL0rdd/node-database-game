@@ -1,6 +1,7 @@
+require("dotenv").config();
 import express, { Application, Request, Response } from "express";
 const app: Application = express();
-const PORT: number = 3000;
+const PORT: string | undefined = process.env.SERVER_PORT;
 
 app.listen(PORT, () => {
   console.log(`Server is working on ${PORT} port`);
