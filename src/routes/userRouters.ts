@@ -1,12 +1,12 @@
 import router, { Application, Request, Response, Router } from "express";
-import { registerUser } from "../controllers/register";
+import { registerUser, loginUser } from "../controllers/user_controllers";
 
 export const userRouter: Application = router();
 
 userRouter.post("/register", registerUser);
 
-/*router.get("/login");
+userRouter.post("/login", loginUser);
 
-router.put("/forgot-pass");//get?
+/*userRouter.put("/forgot-pass");//get?
 
-router.put("/reset-pass");*/
+userRouter.put("/reset-pass");*/
