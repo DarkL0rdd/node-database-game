@@ -1,4 +1,7 @@
 /node_modules
 /dist
 .env
-db.ts
+forgot_password.html
+reset_password.html
+login.html
+register.html

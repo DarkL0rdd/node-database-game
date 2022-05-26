@@ -1,5 +1,6 @@
 # node-database-game
-<h3>Node.js</h3><br/><br/>
+
+<h3>Node.js</h3><br/>
 Framework: Express.js<br/><br/>
 Languages: JavaScript, TypeScript<br/><br/>
 Data base: PostgreSQL<br/><br/>

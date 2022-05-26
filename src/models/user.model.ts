@@ -7,6 +7,7 @@ import {
   AllowNull,
   CreatedAt,
   UpdatedAt,
+  Unique,
 } from "sequelize-typescript";
 import { DataType } from "sequelize-typescript";
 
@@ -23,10 +24,11 @@ export interface UserAttributes {
   timestamps: true,
   underscored: true,
 })
-export class User extends Model<UserAttributes> {
+export class User extends Model<UserAttributes> implements UserAttributes {
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
+  @Unique(true)
   @Column({
     type: DataType.INTEGER,
   })
@@ -45,6 +47,7 @@ export class User extends Model<UserAttributes> {
   second_name: string;
 
   @AllowNull(false)
+  @Unique(true)
   @Column({
     type: DataType.STRING(50),
   })

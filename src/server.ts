@@ -3,7 +3,7 @@ dotenv.config();
 import express, { Application, Request, Response } from "express";
 import { sequelize } from "./sequelize";
 import * as socketio from "socket.io";
-import { userRouter } from "./routes/userRouters";
+import { userRouter } from "./routes/user.routes";
 
 const app: Application = express();
 const PORT: string | undefined = process.env.SERVER_PORT;
