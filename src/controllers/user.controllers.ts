@@ -8,8 +8,6 @@ import {
 } from "../services/password.services";
 
 import { createUser } from "../services/user.services";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 const userSequelize = sequelize.getRepository(User);
 

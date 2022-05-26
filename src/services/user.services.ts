@@ -1,7 +1,5 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
-//import bcrypt from "bcryptjs";
-const jwt = require("jsonwebtoken");
 
 const userSequelize = sequelize.getRepository(User);
 
