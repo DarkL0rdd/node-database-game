@@ -4,11 +4,13 @@ import express, { Application, Request, Response } from "express";
 import { sequelize } from "./sequelize";
 import * as socketio from "socket.io";
 import { userRouter } from "./routes/user.routes";
+import cookieParser from "cookie-parser";
 
 const app: Application = express();
 const PORT: string | undefined = process.env.SERVER_PORT;
 
 app.use(express.json());
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
 try {
@@ -25,7 +27,7 @@ app.listen(PORT, () => {
 app.use("/user", userRouter);
 
 app.get("/", (req: Request, res: Response) => {
-  res.status(200).send("Hello World!");
+  res.status(200).send("Start page");
 });
 
 app.get("/echo", (req: Request, res: Response) => {

@@ -8,6 +8,7 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
+        unique: true,
       },
       first_name: {
         type: DataTypes.STRING(50),
@@ -20,10 +21,15 @@ module.exports = {
       email: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        unique: true,
       },
       password: {
         type: DataTypes.STRING(150),
         allowNull: false,
+      },
+      refresh_token: {
+        //unique: true,
+        allowNull: true,
       },
       createdAt: {
         field: "created_at",

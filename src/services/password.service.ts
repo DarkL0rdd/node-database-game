@@ -50,3 +50,25 @@ export const compareUserPassword = async (
     console.log(err);
   }
 };
+
+/*export const forgotPassword = async (req: Request, res: Response) => {
+  const userFind = await userSequelize.findOne({
+    where: { email: req.body.email },
+  });
+
+  if (!userFind) {
+    res.status(400).send(`User with email ${req.body.email} is not found.`);
+  } else {
+    const token: string = await generateAccessToken(
+      userFind.id,
+      req.body.email,
+      "5m"
+    );
+
+    const link = `http://${process.env.DB_HOST}:${process.env.SERVER_PORT}/reset-password/${userFind.id}/${token}`;
+    console.log(link);
+    res.send("Link has been send to your email.");
+  }
+};*/
+
+//export const resetPassword = async (req: Request, res: Response) => {};

@@ -9,10 +9,13 @@ export const findUserEmail = async (reqEmail: string) => {
       where: { email: reqEmail },
     });
     if (emailFind?.email) {
-      return emailFind.email;
-    } else {
-      return null;
+      const email = emailFind.email;
+      const id = emailFind.id;
+      return { email, id };
     }
+    /*else {
+      return null;
+    }*/
   } catch (err) {
     console.log(err);
   }
@@ -21,7 +24,7 @@ export const findUserEmail = async (reqEmail: string) => {
 export const compareUserEmail = async (reqNewEmail: string) => {
   try {
     const userEmail = await findUserEmail(reqNewEmail);
-    if (userEmail === reqNewEmail) {
+    if (userEmail?.email === reqNewEmail) {
       return false;
     } else {
       return true;
