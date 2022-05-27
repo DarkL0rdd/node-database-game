@@ -4,7 +4,7 @@ import {
   hashUserPassword,
   compareUserPassword,
 } from "../services/password.service";
-import { generateToken, saveToken } from "../services/jwt.service";
+import { generateToken, saveToken, refresh } from "../services/jwt.service";
 import { createUser, logout } from "../services/user.service";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -45,6 +45,7 @@ export const loginUser = async (req: Request, res: Response) => {
       req.body.password
     );
     if (!hashCompare) return res.status(400).send(`Wrong password.`);
+
     const tokens = generateToken(req.body.email, "30m", "30d");
     if (tokens) {
       await saveToken(userEmail.id, tokens.refreshToken);
@@ -64,9 +65,9 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const logoutUser = async (req: Request, res: Response) => {
   try {
-    const cookieRefreshTpken = req.cookies["refresh-token"];
-    if (!cookieRefreshTpken) return res.send("You are already logged out."); //res.redirect("/login");
-    await logout(cookieRefreshTpken);
+    const cookieRefreshToken = req.cookies["refresh-token"];
+    if (!cookieRefreshToken) return res.send("You are already logged out."); //res.redirect("/login");
+    await logout(cookieRefreshToken);
     res.clearCookie("refresh-token");
     res.send("You are logged out.");
   } catch (err) {
@@ -74,26 +75,27 @@ export const logoutUser = async (req: Request, res: Response) => {
   }
 };
 
-/*interface RequestWithUsers extends Request {
-  user: User;
-}
-
-const authenticateToken = async (
-  req: RequestWithUsers,
-  res: Response,
-  next: any
-) => {
-  const bearerToken = req.headers.authorization;
-  console.log(bearerToken);
-  if (!bearerToken) {
-    return res.status(403).send();
-  }
+export const refreshToken = async (req: Request, res: Response) => {
   try {
-    const token = bearerToken.split(" ")[1];
-    const decoded = jwt.verify(token, "process.env.ACCESS_SECRET_KEY") as User;
-    req.user = decoded;
+    const userEmail = await findUserEmail(req.body.email);
+    if (!userEmail)
+      return res
+        .status(400)
+        .send(`User with email ${req.body.email} is not found.`);
+
+    const cookieRefreshToken = req.cookies["refresh-token"];
+    const newRefreshToken = await refresh(cookieRefreshToken);
+    if (!newRefreshToken) return res.send("You can't refresh");
+    const tokens = generateToken(req.body.email, "30m", "30d");
+    if (tokens) {
+      await saveToken(userEmail.id, tokens.refreshToken);
+      res.cookie("refresh-token", tokens.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      res.send("Successful refresh token");
+    }
   } catch (err) {
-    return res.status(401).send("Invalid Token");
+    console.log(err);
   }
-  return next();
-};*/
+};

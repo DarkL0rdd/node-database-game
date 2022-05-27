@@ -5,6 +5,7 @@ import {
   logoutUser,
   //forgotPassword,
   //resetPassword,
+  refreshToken,
 } from "../controllers/user.controllers";
 
 export const userRouter: Application = router();
@@ -15,7 +16,7 @@ userRouter.post("/login", loginUser);
 
 userRouter.post("/logout", logoutUser);
 
-//router.get(/refresh);
+userRouter.get("/refresh", refreshToken);
 
 /*userRouter.post("/forgot-pass", forgotPassword);
 

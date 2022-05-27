@@ -56,20 +56,37 @@ export const removeToken = async (refreshToken: string) => {
   }
 };
 
-export const authenticateAccessToken = async (token: string) => {
+export const refresh = async (refreshToken: string) => {
+  if (!refreshToken) return;
+  const userPayload = await authenticateRefreshToken(refreshToken);
+  const refreshTokenFromDb = await findRefreshToken(refreshToken);
+  if (!userPayload || !refreshTokenFromDb) {
+    return false;
+  }
+  return true;
+};
+
+export const findRefreshToken = async (refreshToken: string) => {
+  const findRefreshToken = await userSequelize.findOne({
+    where: { refresh_token: refreshToken },
+  });
+  return findRefreshToken?.refresh_token;
+};
+
+export const authenticateRefreshToken = async (token: string) => {
   try {
-    const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-    return userData;
+    const payload = jwt.verify(token, process.env.REFRESH_SECRET_KEY);
+    return payload;
   } catch (err) {
     console.log(err);
     return null;
   }
 };
 
-export const authenticateRefreshToken = async (token: string) => {
+export const authenticateAccessToken = async (token: string) => {
   try {
-    const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
-    return userData;
+    const payload = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+    return payload;
   } catch (err) {
     console.log(err);
     return null;
