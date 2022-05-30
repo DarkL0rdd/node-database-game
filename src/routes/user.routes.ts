@@ -3,8 +3,8 @@ import {
   registerUser,
   loginUser,
   logoutUser,
-  //forgotPassword,
-  //resetPassword,
+  forgotPassword,
+  resetPassword,
   refreshToken,
 } from "../controllers/user.controllers";
 
@@ -18,6 +18,6 @@ userRouter.post("/logout", logoutUser);
 
 userRouter.get("/refresh", refreshToken);
 
-/*userRouter.post("/forgot-pass", forgotPassword);
+userRouter.post("/forgot-pass", forgotPassword);
 
-userRouter.put("/reset-pass/:id/:token", resetPassword);*/
+userRouter.put("/reset-pass/:id/:token", resetPassword);

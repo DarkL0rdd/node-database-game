@@ -8,7 +8,6 @@ import {
   CreatedAt,
   UpdatedAt,
   Unique,
-  Default,
 } from "sequelize-typescript";
 import { DataType } from "sequelize-typescript";
 
@@ -26,11 +25,11 @@ export interface UserAttributes {
   timestamps: true,
   underscored: true,
 })
-export class User extends Model<UserAttributes> implements UserAttributes {
+export class User extends Model<User, UserAttributes> {
   @PrimaryKey
   @AutoIncrement
-  @AllowNull(false)
   @Unique(true)
+  @AllowNull(false)
   @Column({
     type: DataType.INTEGER,
   })
@@ -61,11 +60,10 @@ export class User extends Model<UserAttributes> implements UserAttributes {
   })
   password: string;
 
-  @Unique(false) //?!
+  @Unique(true)
   @AllowNull(true)
-  @Default("null")
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(500),
   })
   refresh_token: string;
 

@@ -99,3 +99,15 @@ export const refreshToken = async (req: Request, res: Response) => {
     console.log(err);
   }
 };
+
+export const forgotPassword = async (req: Request, res: Response) => {
+  const email = req.body.email;
+  console.log(email);
+  //find user
+};
+
+export const resetPassword = async (req: Request, res: Response) => {};
+
+/*validation:
+name: number, symbols)_$
+*/
