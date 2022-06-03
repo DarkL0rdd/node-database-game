@@ -9,11 +9,14 @@ module.exports = {
         primaryKey: true,
         unique: true,
         allowNull: false,
+        isInt: true,
+        notEmpty: true,
       },
       role: {
         type: DataTypes.STRING(20),
         unique: true,
         allowNull: false,
+        notEmpty: true,
       },
       description: {
         type: DataTypes.STRING(100),
@@ -24,11 +27,13 @@ module.exports = {
         field: "created_at",
         type: DataTypes.DATE,
         allowNull: false,
+        notEmpty: true,
       },
       updatedAt: {
         field: "updated_at",
         type: DataTypes.DATE,
         allowNull: false,
+        notEmpty: true,
       },
     });
   },

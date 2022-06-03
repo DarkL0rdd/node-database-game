@@ -9,23 +9,30 @@ module.exports = {
         autoIncrement: true,
         unique: true,
         allowNull: false,
+        notEmpty: true,
+        isInt: true,
       },
       first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        notEmpty: true,
       },
       second_name: {
         type: DataTypes.STRING(50),
         allowNull: false,
+        notEmpty: true,
       },
       email: {
         type: DataTypes.STRING(50),
         allowNull: false,
         unique: true,
+        notEmpty: true,
+        isEmail: true,
       },
       password: {
         type: DataTypes.STRING(150),
         allowNull: false,
+        notEmpty: true,
       },
       refresh_token: {
         type: DataTypes.STRING(500),
@@ -35,11 +42,13 @@ module.exports = {
         field: "created_at",
         type: DataTypes.DATE,
         allowNull: false,
+        notEmpty: true,
       },
       updatedAt: {
         field: "updated_at",
         type: DataTypes.DATE,
         allowNull: false,
+        notEmpty: true,
       },
     });
   },
