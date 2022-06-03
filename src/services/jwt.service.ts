@@ -1,6 +1,6 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const userSequelize = sequelize.getRepository(User);
 
@@ -13,14 +13,14 @@ export const generateToken = (
     const payload: object = { reqEmail };
     const accessToken: string = jwt.sign(
       payload,
-      process.env.ACCESS_SECRET_KEY,
+      `${process.env.ACCESS_SECRET_KEY}`,
       {
         expiresIn: timeAccesss,
       }
     );
     const refreshToken: string = jwt.sign(
       payload,
-      process.env.REFRESH_SECRET_KEY,
+      `${process.env.REFRESH_SECRET_KEY}`,
       {
         expiresIn: timeRefresh,
       }
@@ -46,7 +46,7 @@ export const saveToken = async (reqUserId: number, refreshToken: string) => {
 export const removeToken = async (refreshToken: string) => {
   try {
     await userSequelize.update(
-      { refresh_token: "null" },
+      { refresh_token: "" },
       {
         where: { refresh_token: refreshToken },
       }
@@ -56,26 +56,9 @@ export const removeToken = async (refreshToken: string) => {
   }
 };
 
-export const refresh = async (refreshToken: string) => {
-  if (!refreshToken) return;
-  const userPayload = await authenticateRefreshToken(refreshToken);
-  const refreshTokenFromDb = await findRefreshToken(refreshToken);
-  if (!userPayload || !refreshTokenFromDb) {
-    return false;
-  }
-  return true;
-};
-
-export const findRefreshToken = async (refreshToken: string) => {
-  const findRefreshToken = await userSequelize.findOne({
-    where: { refresh_token: refreshToken },
-  });
-  return findRefreshToken?.refresh_token;
-};
-
 export const authenticateRefreshToken = async (token: string) => {
   try {
-    const payload = jwt.verify(token, process.env.REFRESH_SECRET_KEY);
+    const payload = jwt.verify(token, `${process.env.REFRESH_SECRET_KEY}`);
     return payload;
   } catch (err) {
     console.log(err);
@@ -85,7 +68,7 @@ export const authenticateRefreshToken = async (token: string) => {
 
 export const authenticateAccessToken = async (token: string) => {
   try {
-    const payload = jwt.verify(token, process.env.ACCESS_SECRET_KEY);
+    const payload = jwt.verify(token, `${process.env.ACCESS_SECRET_KEY}`);
     return payload;
   } catch (err) {
     console.log(err);

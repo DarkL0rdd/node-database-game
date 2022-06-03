@@ -29,7 +29,6 @@ module.exports = {
       },
       refresh_token: {
         type: DataTypes.STRING(500),
-        unique: true,
         allowNull: true,
       },
       createdAt: {

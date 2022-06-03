@@ -8,6 +8,8 @@ import {
   CreatedAt,
   UpdatedAt,
   Unique,
+  NotEmpty,
+  IsInt,
 } from "sequelize-typescript";
 import { DataType } from "sequelize-typescript";
 
@@ -27,6 +29,8 @@ export class Role extends Model<RoleAttributes> implements RoleAttributes {
   @AutoIncrement
   @Unique(true)
   @AllowNull(false)
+  @NotEmpty
+  @IsInt
   @Column({
     type: DataType.INTEGER,
   })
@@ -34,6 +38,7 @@ export class Role extends Model<RoleAttributes> implements RoleAttributes {
 
   @Unique(true)
   @AllowNull(false)
+  @NotEmpty
   @Column({
     type: DataType.STRING(20),
   })

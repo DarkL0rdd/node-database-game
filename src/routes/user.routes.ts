@@ -1,12 +1,13 @@
-import router, { Application, Request, Response, Router } from "express";
+import router, { Application } from "express";
 import {
   registerUser,
   loginUser,
   logoutUser,
   forgotPassword,
   resetPassword,
-  refreshToken,
+  getUsers,
 } from "../controllers/user.controllers";
+import { checkRefreshToken } from "../middleware/authorization.JWT";
 
 export const userRouter: Application = router();
 
@@ -16,8 +17,9 @@ userRouter.post("/login", loginUser);
 
 userRouter.post("/logout", logoutUser);
 
-userRouter.get("/refresh", refreshToken);
+userRouter.post("/forgot-password", forgotPassword);
 
-userRouter.post("/forgot-pass", forgotPassword);
+userRouter.get("/reset-password/:link", resetPassword);
+userRouter.post("/reset-password", resetPassword);
 
-userRouter.put("/reset-pass/:id/:token", resetPassword);
+userRouter.get("/users", getUsers);

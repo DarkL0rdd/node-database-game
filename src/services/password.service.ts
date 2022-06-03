@@ -1,6 +1,7 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
+
 const userSequelize = sequelize.getRepository(User);
 
 export const hashUserPassword = async (
@@ -51,24 +52,17 @@ export const compareUserPassword = async (
   }
 };
 
-/*export const forgotPassword = async (req: Request, res: Response) => {
-  const userFind = await userSequelize.findOne({
-    where: { email: req.body.email },
-  });
+export const generateLinkEmail = async () => {
+  try {
+    const token = "";
 
-  if (!userFind) {
-    res.status(400).send(`User with email ${req.body.email} is not found.`);
-  } else {
-    const token: string = await generateAccessToken(
-      userFind.id,
-      req.body.email,
-      "5m"
-    );
-
-    const link = `http://${process.env.DB_HOST}:${process.env.SERVER_PORT}/reset-password/${userFind.id}/${token}`;
-    console.log(link);
-    res.send("Link has been send to your email.");
+    const resetLink = `http://${process.env.DB_HOST}:${process.env.SERVER_PORT}/user/reset-password/${token}`;
+    return resetLink;
+  } catch (err) {
+    console.log(err);
   }
-};*/
+};
 
-//export const resetPassword = async (req: Request, res: Response) => {};
+export const changePassword = async (newUserPassword: string) => {
+  const newPassword = await hashUserPassword(newUserPassword, 8);
+};

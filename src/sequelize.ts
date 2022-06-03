@@ -21,7 +21,7 @@ export const sequelize = new Sequelize(
 );
 sequelize
   .sync({ alter: true })
-  .then(() => console.log("Connect is OK"))
+  .then(() => console.log("Sync is OK"))
   .catch((err) => {
     console.log(err);
   });

@@ -3,9 +3,11 @@ import { findUserEmail, compareUserEmail } from "../services/email.service";
 import {
   hashUserPassword,
   compareUserPassword,
+  generateLinkEmail,
 } from "../services/password.service";
-import { generateToken, saveToken, refresh } from "../services/jwt.service";
-import { createUser, logout } from "../services/user.service";
+import { generateToken, saveToken } from "../services/jwt.service";
+import { createUser, getAllUsers, logout } from "../services/user.service";
+import console from "console";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -16,13 +18,13 @@ export const registerUser = async (req: Request, res: Response) => {
         .send(`User with email ${req.body.email} already exist.`);
     const hashPassword = await hashUserPassword(req.body.password, 8);
     if (hashPassword) {
-      const user = await createUser(
+      const newUser = await createUser(
         req.body.first_name,
         req.body.second_name,
         req.body.email,
         hashPassword
       );
-      if (user) return res.status(200).send("Successful registration.");
+      if (newUser) return res.status(200).send("Successful registration.");
     } else {
       return res.status(500).send();
     }
@@ -40,6 +42,7 @@ export const loginUser = async (req: Request, res: Response) => {
       return res
         .status(400)
         .send(`User with email ${req.body.email} is not found.`);
+
     const hashCompare = await compareUserPassword(
       req.body.email,
       req.body.password
@@ -50,9 +53,13 @@ export const loginUser = async (req: Request, res: Response) => {
     if (tokens) {
       await saveToken(userEmail.id, tokens.refreshToken);
       res.cookie("refresh-token", tokens.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 30,
         httpOnly: true,
       });
+      req.headers.authorization = "Bearer " + tokens.accessToken;
+
+      console.log("Your access-token: " + req.headers.authorization); //!!!!!!!
+
       res.status(200).send("Successful login.");
     } else {
       res.status(500).send();
@@ -65,49 +72,46 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const logoutUser = async (req: Request, res: Response) => {
   try {
-    const cookieRefreshToken = req.cookies["refresh-token"];
-    if (!cookieRefreshToken) return res.send("You are already logged out."); //res.redirect("/login");
-    await logout(cookieRefreshToken);
+    if (!req.headers.authorization && !req.cookies["refresh-token"])
+      return res.send("You are already logged out.");
+    await logout(req.cookies["refresh-token"]);
     res.clearCookie("refresh-token");
+    req.headers.authorization = "";
     res.send("You are logged out.");
   } catch (err) {
     console.log(err);
   }
 };
 
-export const refreshToken = async (req: Request, res: Response) => {
+export const getUsers = async (req: Request, res: Response) => {
   try {
-    const userEmail = await findUserEmail(req.body.email);
-    if (!userEmail)
-      return res
-        .status(400)
-        .send(`User with email ${req.body.email} is not found.`);
-
-    const cookieRefreshToken = req.cookies["refresh-token"];
-    const newRefreshToken = await refresh(cookieRefreshToken);
-    if (!newRefreshToken) return res.send("You can't refresh");
-    const tokens = generateToken(req.body.email, "30m", "30d");
-    if (tokens) {
-      await saveToken(userEmail.id, tokens.refreshToken);
-      res.cookie("refresh-token", tokens.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      res.send("Successful refresh token");
-    }
+    const allUsers = await getAllUsers();
+    return res.json(allUsers);
   } catch (err) {
     console.log(err);
   }
 };
 
 export const forgotPassword = async (req: Request, res: Response) => {
-  const email = req.body.email;
-  console.log(email);
-  //find user
+  try {
+    const userEmail = await findUserEmail(req.body.email);
+    if (!userEmail)
+      return res
+        .status(400)
+        .send(`User with email ${req.body.email} is not found.`);
+    const resetPasswordLink = await generateLinkEmail();
+    console.log(`Link from email: ${resetPasswordLink}`);
+    res.send("Link has been sent to email.");
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const resetPassword = async (req: Request, res: Response) => {};
-
-/*validation:
-name: number, symbols)_$
-*/
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    console.log("RESET");
+    res.send("S");
+  } catch (err) {
+    console.log(err);
+  }
+};

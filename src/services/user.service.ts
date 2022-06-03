@@ -32,3 +32,17 @@ export const logout = async (refreshToken: string) => {
     console.log(err);
   }
 };
+
+export const getAllUsers = async () => {
+  let users: User[] | undefined = undefined;
+  try {
+    return (users = await userSequelize.findAll({
+      attributes: {
+        exclude: ["password", "refresh_token", "createdAt", "updatedAt"],
+      },
+    }));
+  } catch (err) {
+    console.log(err);
+    return (users = undefined);
+  }
+};

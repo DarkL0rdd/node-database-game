@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 import express, { Application, Request, Response } from "express";
 import { sequelize } from "./sequelize";
 import * as socketio from "socket.io";

@@ -8,6 +8,9 @@ import {
   CreatedAt,
   UpdatedAt,
   Unique,
+  NotEmpty,
+  IsEmail,
+  IsInt,
 } from "sequelize-typescript";
 import { DataType } from "sequelize-typescript";
 
@@ -30,18 +33,22 @@ export class User extends Model<User, UserAttributes> {
   @AutoIncrement
   @Unique(true)
   @AllowNull(false)
+  @NotEmpty
+  @IsInt
   @Column({
     type: DataType.INTEGER,
   })
   id: number;
 
   @AllowNull(false)
+  @NotEmpty
   @Column({
     type: DataType.STRING(50),
   })
   first_name: string;
 
   @AllowNull(false)
+  @NotEmpty
   @Column({
     type: DataType.STRING(50),
   })
@@ -49,18 +56,20 @@ export class User extends Model<User, UserAttributes> {
 
   @AllowNull(false)
   @Unique(true)
+  @NotEmpty
+  @IsEmail
   @Column({
     type: DataType.STRING(50),
   })
   email: string;
 
   @AllowNull(false)
+  @NotEmpty
   @Column({
-    type: DataType.STRING(150),
+    type: DataType.STRING(500),
   })
   password: string;
 
-  @Unique(true)
   @AllowNull(true)
   @Column({
     type: DataType.STRING(500),
