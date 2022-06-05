@@ -19,6 +19,7 @@ export const sequelize = new Sequelize(
     logging: false,
   }
 );
+//models: [__dirname + "/models/**/*.model.js"], - змінити на цю строку якщо не працює імпорт моделей
 sequelize
   .sync({ alter: true })
   .then(() => console.log("Sync is OK"))

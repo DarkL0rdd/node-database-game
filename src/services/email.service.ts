@@ -8,14 +8,11 @@ export const findUserEmail = async (reqEmail: string) => {
     const emailFind = await userSequelize.findOne({
       where: { email: reqEmail },
     });
-    if (emailFind?.email) {
+    if (emailFind) {
       const email = emailFind.email;
       const id = emailFind.id;
       return { email, id };
     }
-    /*else {
-      return null;
-    }*/
   } catch (err) {
     console.log(err);
   }

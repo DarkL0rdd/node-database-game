@@ -1,6 +1,7 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const userSequelize = sequelize.getRepository(User);
 
@@ -52,10 +53,11 @@ export const compareUserPassword = async (
   }
 };
 
-export const generateLinkEmail = async () => {
+export const generateLinkEmail = async (userEmail: string) => {
   try {
-    const token = "";
-
+    const token = jwt.sign({ userEmail }, `${process.env.ACCESS_SECRET_KEY}`, {
+      expiresIn: "5m",
+    });
     const resetLink = `http://${process.env.DB_HOST}:${process.env.SERVER_PORT}/user/reset-password/${token}`;
     return resetLink;
   } catch (err) {
@@ -64,5 +66,18 @@ export const generateLinkEmail = async () => {
 };
 
 export const changePassword = async (newUserPassword: string) => {
-  const newPassword = await hashUserPassword(newUserPassword, 8);
+  return await hashUserPassword(newUserPassword, 8);
+};
+
+export const saveNewUserPassword = async (password: string) => {
+  try {
+    return await userSequelize.update(
+      { password: password },
+      {
+        where: { email: process.env.EMAIL_RESET_PASSWORD },
+      }
+    );
+  } catch (err) {
+    console.log(err);
+  }
 };
