@@ -5,15 +5,10 @@ import jwt from "jsonwebtoken";
 
 const userSequelize = sequelize.getRepository(User);
 
-export const hashUserPassword = async (
-  reqPassword: string,
-  salRounds: number
-) => {
+export const hashUserPassword = async (reqPassword: string, salRounds: number) => {
   try {
     if (reqPassword) {
       return await bcrypt.hashSync(reqPassword, salRounds);
-    } else {
-      return null;
     }
   } catch (err) {
     console.log(err);
@@ -35,19 +30,14 @@ const findUserPassword = async (reqEmail: string) => {
   }
 };
 
-export const compareUserPassword = async (
-  reqEmail: string,
-  reqPassword: string
-) => {
+export const compareUserPassword = async (reqEmail: string, reqPassword: string) => {
   try {
-    const dbUserPassword = await findUserPassword(reqEmail);
-    if (dbUserPassword) {
-      const hashCompare: boolean = await bcrypt.compareSync(
-        reqPassword,
-        dbUserPassword
-      );
-      return hashCompare;
+    const userPasswordFromDb = await findUserPassword(reqEmail);
+    let hashCompare: boolean = false;
+    if (userPasswordFromDb) {
+      hashCompare = await bcrypt.compareSync(reqPassword, userPasswordFromDb);
     }
+    return hashCompare;
   } catch (err) {
     console.log(err);
   }
@@ -65,16 +55,12 @@ export const generateLinkEmail = async (userEmail: string) => {
   }
 };
 
-export const changePassword = async (newUserPassword: string) => {
-  return await hashUserPassword(newUserPassword, 8);
-};
-
-export const saveNewUserPassword = async (password: string) => {
+export const saveNewUserPassword = async (password: string, reqEmail: string) => {
   try {
     return await userSequelize.update(
       { password: password },
       {
-        where: { email: process.env.EMAIL_RESET_PASSWORD },
+        where: { email: reqEmail },
       }
     );
   } catch (err) {
