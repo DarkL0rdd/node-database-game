@@ -16,7 +16,7 @@ userRouter.post("/register", registerUser);
 
 userRouter.post("/login", loginUser);
 
-userRouter.all("/refresh", newAccessToken);
+userRouter.all("/refresh", newAccessToken); //? куди далі перейти
 
 userRouter.post("/logout", logoutUser);
 
