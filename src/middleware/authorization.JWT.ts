@@ -1,23 +1,14 @@
 import { Request, Response, NextFunction } from "express";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  verifyAccessToken,
-  verifyRefreshToken,
-} from "../services/jwt.service";
+import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "../services/jwt.service";
 
-export const authenticateAccessToken = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authenticateAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader)
-      return res.status(401).send("You are not authorized.");
+    if (!authorizationHeader) return res.status(401).send("You are not authorized.");
     const token = authorizationHeader.split(" ")[1];
     const userPayload = await verifyAccessToken(token);
-    if (userPayload === undefined) {
+    if (!userPayload) {
+      console.log("userPayload", userPayload);
       console.log("Middleware - userPayload is undefined");
       res.redirect(307, "/user/refresh");
     } else {
@@ -26,7 +17,6 @@ export const authenticateAccessToken = async (
     }
   } catch (err) {
     console.log(err);
-    res.status(401).send("Error while authenticating access token.");
   }
 };
 
