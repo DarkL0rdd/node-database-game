@@ -5,32 +5,18 @@ import console from "console";
 
 const userSequelize = sequelize.getRepository(User);
 
-export const generateAccessToken = async (
-  reqEmail: string,
-  timeAccesss: string
-) => {
+export const generateAccessToken = async (reqEmail: string, timeAccesss: string) => {
   try {
-    const accessToken = jwt.sign(
-      { reqEmail },
-      `${process.env.ACCESS_SECRET_KEY}`,
-      { expiresIn: timeAccesss }
-    );
+    const accessToken = jwt.sign({ reqEmail }, `${process.env.ACCESS_SECRET_KEY}`, { expiresIn: timeAccesss });
     return accessToken;
   } catch (err) {
     console.log(err);
   }
 };
 
-export const generateRefreshToken = async (
-  reqEmail: string,
-  timeRefresh: string
-) => {
+export const generateRefreshToken = async (reqEmail: string, timeRefresh: string) => {
   try {
-    const refreshToken = jwt.sign(
-      { reqEmail },
-      `${process.env.REFRESH_SECRET_KEY}`,
-      { expiresIn: timeRefresh }
-    );
+    const refreshToken = jwt.sign({ reqEmail }, `${process.env.REFRESH_SECRET_KEY}`, { expiresIn: timeRefresh });
     return refreshToken;
   } catch (err) {
     console.log(err);
@@ -51,7 +37,7 @@ export const saveToken = async (reqUserId: number, refreshToken: string) => {
 
 export const removeToken = async (refreshToken: string) => {
   try {
-    await userSequelize.update(
+    return await userSequelize.update(
       { refresh_token: "" },
       {
         where: { refresh_token: refreshToken },
@@ -64,21 +50,19 @@ export const removeToken = async (refreshToken: string) => {
 
 export const verifyRefreshToken = async (refreshToken: string) => {
   //authenticateRefreshToken
-  let payloadUser;
   try {
-    jwt.verify(
-      refreshToken,
-      `${process.env.REFRESH_SECRET_KEY}`,
-      (err, payload) => {
-        if (err) {
-          console.log(err);
-          //payloadUser = false;
-        } else {
-          payloadUser = payload;
-        }
+    return jwt.verify(refreshToken, `${process.env.REFRESH_SECRET_KEY}`);
+    //let payloadUser;
+    //payloadUser = jwt.verify(refreshToken, `${process.env.REFRESH_SECRET_KEY}`);
+    /*jwt.verify(refreshToken, `${process.env.REFRESH_SECRET_KEY}`, (err, payload) => {
+      if (err) {
+        console.log(err);
+        //payloadUser = false;
+      } else {
+        payloadUser = payload;
       }
-    );
-    return payloadUser;
+    });*/
+    //return payloadUser;
   } catch (err) {
     console.log(err);
   }
@@ -86,21 +70,19 @@ export const verifyRefreshToken = async (refreshToken: string) => {
 
 export const verifyAccessToken = async (accessToken: string) => {
   //authenticateAccessToken
-  let payloadUser;
   try {
-    jwt.verify(
-      accessToken,
-      `${process.env.ACCESS_SECRET_KEY}`,
-      (err, payload) => {
-        if (err) {
-          console.log(err);
-          //payloadUser = false;
-        } else {
-          payloadUser = payload;
-        }
+    return jwt.verify(accessToken, `${process.env.ACCESS_SECRET_KEY}`);
+    //let payloadUser;
+    //payloadUser = jwt.verify(accessToken, `${process.env.ACCESS_SECRET_KEY}`);
+    /*jwt.verify(accessToken, `${process.env.ACCESS_SECRET_KEY}`, (err, payload) => {
+      if (err) {
+        console.log(err);
+        //payloadUser = false;
+      } else {
+        payloadUser = payload;
       }
-    );
-    return payloadUser;
+    });*/
+    //return payloadUser;
   } catch (err) {
     console.log(err);
   }
