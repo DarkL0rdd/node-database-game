@@ -22,9 +22,9 @@ export const compareUserEmail = async (reqNewEmail: string) => {
   try {
     const userEmail = await findUserEmail(reqNewEmail);
     if (userEmail?.email === reqNewEmail) {
-      return false;
-    } else {
       return true;
+    } else {
+      return false;
     }
   } catch (err) {
     console.log(err);
