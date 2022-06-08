@@ -6,7 +6,7 @@ import {
   forgotPassword,
   resetPassword,
   getUsers,
-  newAccessToken,
+  newTokens,
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 
@@ -16,13 +16,13 @@ userRouter.post("/register", registerUser);
 
 userRouter.post("/login", loginUser);
 
-userRouter.all("/refresh", newAccessToken); //? куди далі перейти
+userRouter.all("/refresh", newTokens); //? куди далі перейти
 
 userRouter.post("/logout", logoutUser);
 
 userRouter.post("/forgot-password", forgotPassword);
 
-userRouter.get("/reset-password/:link", resetPassword);
-userRouter.post("/reset-password", resetPassword);
+//userRouter.get("/reset-password/:link", resetPassword);
+userRouter.post("/reset-password/:link", resetPassword);
 
 userRouter.get("/users", authenticateAccessToken, getUsers);

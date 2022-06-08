@@ -1,7 +1,6 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
 import jwt from "jsonwebtoken";
-import console from "console";
 
 const userSequelize = sequelize.getRepository(User);
 

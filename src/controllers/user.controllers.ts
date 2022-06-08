@@ -9,6 +9,7 @@ import {
   verifyRefreshToken,
 } from "../services/jwt.service";
 import { createUser, getAllUsers, logout } from "../services/user.service";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -122,16 +123,19 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-export const newAccessToken = async (req: Request, res: Response) => {
+export const newTokens = async (req: Request, res: Response) => {
   try {
-    console.log("You are in newAccessToken");
-    const refreshToken = req.cookies["refresh-token"];
-    if (!refreshToken) return res.status(401).send("You are not authorized.");
-    const userPayload = await verifyRefreshToken(refreshToken);
-    if (!userPayload) return res.status(401).send("You are not authorized.");
+    console.log("You are in newTokens");
+    const refreshTokenCookie = req.cookies["refresh-token"];
+    const userPayload = jwt.decode(refreshTokenCookie);
     const getUserPayload = JSON.parse(JSON.stringify(userPayload));
     const accessToken = await generateAccessToken(getUserPayload.reqEmail, "30m");
-    res.status(200).send({ "New Access Token": accessToken });
+    const refreshToken = await generateRefreshToken(getUserPayload.reqEmail, "30d");
+    res.cookie("refresh-token", refreshToken, {
+      maxAge: 24 * 60 * 60 * 30,
+      httpOnly: true,
+    });
+    res.status(200).send({ "New Access Token": accessToken, "New Refresh Token": refreshToken });
   } catch (err) {
     console.log(err);
   }
