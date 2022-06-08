@@ -6,7 +6,7 @@ export const authenticateAccessToken = async (req: Request, res: Response, next:
     const authorizationHeader = req.headers.authorization;
     if (!authorizationHeader) return res.status(401).send("You are not authorized.");
     const token = authorizationHeader.split(" ")[1];
-    const userPayload = await verifyAccessToken(token);
+    const userPayload = await verifyAccessToken(token); //переробити + додати перевірку та генерацію рефреш токену
     if (!userPayload) {
       console.log("userPayload", userPayload);
       console.log("Middleware - userPayload is undefined");

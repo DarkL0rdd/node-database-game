@@ -18,11 +18,6 @@ module.exports = {
         allowNull: false,
         notEmpty: true,
       },
-      description: {
-        type: DataTypes.STRING(100),
-        unique: true,
-        allowNull: false,
-      },
       createdAt: {
         field: "created_at",
         type: DataTypes.DATE,

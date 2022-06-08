@@ -12,6 +12,13 @@ module.exports = {
         notEmpty: true,
         isInt: true,
       },
+      role_id: {
+        type: DataTypes.INTEGER,
+        unique: true,
+        allowNull: false,
+        notEmpty: true,
+        isInt: true,
+      },
       first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,

@@ -8,6 +8,7 @@ export const createUser = async (reqFirstName: string, reqSecondName: string, re
   try {
     return await userSequelize.create({
       first_name: reqFirstName,
+      role_id: 1, //!
       second_name: reqSecondName,
       email: reqEmail,
       password: reqPassword,
@@ -32,6 +33,7 @@ export const getAllUsers = async () => {
       attributes: {
         exclude: ["password", "refresh_token", "createdAt", "updatedAt"],
       },
+      include: ["role"],
     });
   } catch (err) {
     console.log(err);

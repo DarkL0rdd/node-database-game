@@ -10,13 +10,14 @@ import {
   Unique,
   NotEmpty,
   IsInt,
+  HasMany,
+  ForeignKey,
 } from "sequelize-typescript";
 import { DataType } from "sequelize-typescript";
-
+import { User } from "../models/user.model";
 export interface RoleAttributes {
   id: number;
   role: string;
-  description: string;
 }
 
 @Table({
@@ -24,7 +25,7 @@ export interface RoleAttributes {
   timestamps: true,
   underscored: true,
 })
-export class Role extends Model<RoleAttributes> implements RoleAttributes {
+export class Role extends Model<Role, RoleAttributes> {
   @PrimaryKey
   @AutoIncrement
   @Unique(true)
@@ -44,12 +45,8 @@ export class Role extends Model<RoleAttributes> implements RoleAttributes {
   })
   role: string;
 
-  @Unique(true)
-  @AllowNull(false)
-  @Column({
-    type: DataType.STRING(100),
-  })
-  description: string;
+  @HasMany(() => User, "role_id")
+  users: User[];
 
   @CreatedAt
   createdAt: Date;

@@ -11,11 +11,15 @@ import {
   NotEmpty,
   IsEmail,
   IsInt,
+  ForeignKey,
+  HasOne,
+  BelongsTo,
 } from "sequelize-typescript";
 import { DataType } from "sequelize-typescript";
-
+import { Role } from "../models/role.model";
 export interface UserAttributes {
   id?: number;
+  role_id?: number;
   first_name: string;
   second_name: string;
   email: string;
@@ -39,6 +43,19 @@ export class User extends Model<User, UserAttributes> {
     type: DataType.INTEGER,
   })
   id: number;
+
+  @Unique(true)
+  @AllowNull(false)
+  @NotEmpty
+  @IsInt
+  @ForeignKey(() => Role)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  role_id: number;
+
+  @BelongsTo(() => Role, "role_id")
+  role: Role;
 
   @AllowNull(false)
   @NotEmpty
