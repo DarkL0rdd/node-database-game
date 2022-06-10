@@ -33,24 +33,8 @@ export const loginUser = async (req: Request, res: Response) => {
   try {
     const userEmail = await findUserEmail(req.body.email);
     if (!userEmail) return res.status(400).send(`User with email ${req.body.email} is not found.`);
-
     const hashCompare = await compareUserPassword(req.body.email, req.body.password);
     if (!hashCompare) return res.status(400).send(`Wrong password.`);
-
-    //перевірка існування заголовка авторизації
-    /*if (
-      req.headers.authorization &&
-      (await verifyAccessToken(req.headers.authorization.split(" ")[1])) //! час життя токену
-    ) {
-      return res.status(200).send("You are already logged in.");
-    }*/
-
-    /*if (
-      (await verifyAccessToken(
-        req.headers.authorization?.split(" ")[1] ?? ""
-      )) === false
-    ) */
-
     const accessToken = await generateAccessToken(req.body.email, "1s"); //!! час життя токену
     const refreshToken = await generateRefreshToken(req.body.email, "30d");
     if (accessToken && refreshToken) {
@@ -71,10 +55,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
 export const logoutUser = async (req: Request, res: Response) => {
   try {
-    //const accessToken = req.headers.authorization.split(" ")[1]; //!! check[1] !!
-
     //!? що робити, якщо немає кукі
-
     if (!req.headers.authorization || !req.cookies["refresh-token"]) return res.send("You are already logged out.");
     await logout(req.cookies["refresh-token"]);
     res.clearCookie("refresh-token");
@@ -107,7 +88,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
 export const resetPassword = async (req: Request, res: Response) => {
   try {
-    const userPayloadFromLink = await verifyAccessToken(req.params.link); //!!дістати почту з посилання
+    const userPayloadFromLink = await verifyAccessToken(req.params.link);
     const userEmailFromLink = JSON.parse(JSON.stringify(userPayloadFromLink));
     const userEmail = await findUserEmail(userEmailFromLink.userEmail);
     if (!userEmail) return res.status(400).send(`User with email ${userEmailFromLink.userEmail} is not found.`);
@@ -123,7 +104,7 @@ export const resetPassword = async (req: Request, res: Response) => {
   }
 };
 
-export const newTokens = async (req: Request, res: Response) => {
+export const generateNewTokens = async (req: Request, res: Response) => {
   try {
     console.log("You are in newTokens");
     const refreshTokenCookie = req.cookies["refresh-token"];
@@ -140,3 +121,5 @@ export const newTokens = async (req: Request, res: Response) => {
     console.log(err);
   }
 };
+
+export const getInfoUser = async (req: Request, res: Response) => {};

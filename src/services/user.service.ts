@@ -8,7 +8,7 @@ export const createUser = async (reqFirstName: string, reqSecondName: string, re
   try {
     return await userSequelize.create({
       first_name: reqFirstName,
-      role_id: 1, //!
+      //role_id: +"", //!
       second_name: reqSecondName,
       email: reqEmail,
       password: reqPassword,

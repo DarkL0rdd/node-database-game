@@ -19,12 +19,14 @@ module.exports = {
         notEmpty: true,
       },
       createdAt: {
+        underscored: true,
         field: "created_at",
         type: DataTypes.DATE,
         allowNull: false,
         notEmpty: true,
       },
       updatedAt: {
+        underscored: true,
         field: "updated_at",
         type: DataTypes.DATE,
         allowNull: false,

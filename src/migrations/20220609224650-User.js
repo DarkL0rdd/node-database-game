@@ -12,13 +12,10 @@ module.exports = {
         notEmpty: true,
         isInt: true,
       },
-      role_id: {
+      /*role_id: {
         type: DataTypes.INTEGER,
-        unique: true,
-        allowNull: false,
-        notEmpty: true,
-        isInt: true,
-      },
+        allowNull: true,
+      },*/
       first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,
@@ -46,12 +43,14 @@ module.exports = {
         allowNull: true,
       },
       createdAt: {
+        underscored: true,
         field: "created_at",
         type: DataTypes.DATE,
         allowNull: false,
         notEmpty: true,
       },
       updatedAt: {
+        underscored: true,
         field: "updated_at",
         type: DataTypes.DATE,
         allowNull: false,
