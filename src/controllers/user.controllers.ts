@@ -8,7 +8,7 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "../services/jwt.service";
-import { createUser, getAllUsers, getUser, logout } from "../services/user.service";
+import { changeInfoUser, createUser, getAllUsers, getInfoUser, logout } from "../services/user.service";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -122,10 +122,21 @@ export const generateNewTokens = async (req: Request, res: Response) => {
   }
 };
 
-export const getInfoUser = async (req: Request, res: Response) => {
+export const showInfoUser = async (req: Request, res: Response) => {
   try {
-    const oneUser = await getUser(req.user.reqEmail);
+    const oneUser = await getInfoUser(req.user.reqEmail);
     return res.json(oneUser);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateInfoUser = async (req: Request, res: Response) => {
+  try {
+    if (await changeInfoUser(req.user.reqEmail, req.body.first_name, req.body.second_name, req.body.email, req.body.password)) {
+      return res.status(200).send("Successful update info user.");
+    }
+    return res.status(500).send("Something went wrong.");
   } catch (error) {
     console.log(error);
   }

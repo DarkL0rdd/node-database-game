@@ -7,7 +7,8 @@ import {
   resetPassword,
   getUsers,
   generateNewTokens,
-  getInfoUser,
+  showInfoUser,
+  updateInfoUser,
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 
@@ -22,12 +23,14 @@ userRouter.post("/forgot-password", forgotPassword);
 //userRouter.get("/reset-password/:link", resetPassword);
 userRouter.post("/reset-password/:link", resetPassword);
 
+userRouter.get("/profile", authenticateAccessToken, showInfoUser);
+userRouter.post("/profile/change-info", authenticateAccessToken, updateInfoUser);
+
 //admin
-userRouter.get("/profile", authenticateAccessToken, getInfoUser);
 userRouter.get("/profile/admin-panel/list-managers", authenticateAccessToken);
-userRouter.get("/profile/admin-panel/list-managers/:id", authenticateAccessToken);
+userRouter.get("/profile/admin-panel/list-managers/:manager-id", authenticateAccessToken);
 userRouter.get("/profile/admin-panel/list-players", authenticateAccessToken);
-userRouter.get("/profile/admin-panel/list-players/:id", authenticateAccessToken);
+userRouter.get("/profile/admin-panel/list-players/:player-id", authenticateAccessToken);
 
 //manager
 
