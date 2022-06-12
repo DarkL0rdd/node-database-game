@@ -8,7 +8,15 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "../services/jwt.service";
-import { changeInfoUser, createUser, getAllUsers, getInfoUser, logout } from "../services/user.service";
+import {
+  changeInfoUser,
+  createUser,
+  getAllUsers,
+  getInfoManager,
+  getInfoManagerById,
+  getInfoUser,
+  logout,
+} from "../services/user.service";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -137,6 +145,24 @@ export const updateInfoUser = async (req: Request, res: Response) => {
       return res.status(200).send("Successful update info user.");
     }
     return res.status(500).send("Something went wrong.");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const showInfoManager = async (req: Request, res: Response) => {
+  try {
+    const manyManagers = await getInfoManager();
+    return res.json(manyManagers);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const showInfoByIdManager = async (req: Request, res: Response) => {
+  try {
+    const oneManager = await getInfoManagerById(req.params.id);
+    return res.json(oneManager);
   } catch (error) {
     console.log(error);
   }

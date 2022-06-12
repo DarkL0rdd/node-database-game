@@ -73,12 +73,34 @@ export const changeInfoUser = async (
   }
 };
 
+export const getInfoManager = async () => {
+  try {
+    return await userSequelize.findAll({
+      //attributes: ["first_name", "second_name", "email"],
+      include: [{ model: roleSequelize, /*attributes: ["role_name"],*/ where: { role_name: "Manager" } }],
+      attributes: { exclude: ["password", "refresh_token"] },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getInfoManagerById = async (managerId: string) => {
+  try {
+    return await userSequelize.findOne({
+      where: { id: managerId },
+      include: [{ model: roleSequelize, where: { role_name: "Manager" } }],
+      attributes: { exclude: ["password", "refresh_token"] },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+//test
 export const getAllUsers = async () => {
   try {
     return await userSequelize.findAll({
-      attributes: {
-        exclude: ["password", "refresh_token", "createdAt", "updatedAt"],
-      },
       include: ["role"],
     });
   } catch (err) {
