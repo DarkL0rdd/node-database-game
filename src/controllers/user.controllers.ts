@@ -8,7 +8,7 @@ import {
   verifyAccessToken,
   verifyRefreshToken,
 } from "../services/jwt.service";
-import { createUser, getAllUsers, logout } from "../services/user.service";
+import { createUser, getAllUsers, getUser, logout } from "../services/user.service";
 import jwt from "jsonwebtoken";
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -123,5 +123,10 @@ export const generateNewTokens = async (req: Request, res: Response) => {
 };
 
 export const getInfoUser = async (req: Request, res: Response) => {
-  console.log(req.user);
+  try {
+    const oneUser = await getUser(req.user.reqEmail);
+    return res.json(oneUser);
+  } catch (error) {
+    console.log(error);
+  }
 };

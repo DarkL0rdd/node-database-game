@@ -31,6 +31,18 @@ export const logout = async (refreshToken: string) => {
   }
 };
 
+export const getUser = async (userEmail: string) => {
+  try {
+    return await userSequelize.findOne({
+      where: { email: userEmail },
+      attributes: ["first_name", "second_name", "email"],
+      include: [{ model: roleSequelize, attributes: ["role_name"] }],
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getAllUsers = async () => {
   try {
     return await userSequelize.findAll({
