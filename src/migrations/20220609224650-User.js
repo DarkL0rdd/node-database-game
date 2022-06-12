@@ -12,10 +12,10 @@ module.exports = {
         notEmpty: true,
         isInt: true,
       },
-      /*role_id: {
+      role_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      },*/
+      },
       first_name: {
         type: DataTypes.STRING(50),
         allowNull: false,

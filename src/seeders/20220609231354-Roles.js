@@ -1,20 +1,19 @@
 "use strict";
-
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("Roles", [
       {
-        role: "Admin",
+        role_name: "Admin",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
       {
-        role: "Manager",
+        role_name: "Manager",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },
       {
-        role: "Player",
+        role_name: "Player",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },

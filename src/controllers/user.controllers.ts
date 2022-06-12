@@ -122,4 +122,6 @@ export const generateNewTokens = async (req: Request, res: Response) => {
   }
 };
 
-export const getInfoUser = async (req: Request, res: Response) => {};
+export const getInfoUser = async (req: Request, res: Response) => {
+  console.log(req.user);
+};

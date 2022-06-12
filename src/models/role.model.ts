@@ -43,10 +43,10 @@ export class Role extends Model<Role, RoleAttributes> {
   @Column({
     type: DataType.STRING(20),
   })
-  role: string;
+  role_name: string;
 
-  /*@HasMany(() => User, "role_id")
-  users: User[];*/
+  @HasMany(() => User, "role_id")
+  users: User[];
 
   @CreatedAt
   createdAt: Date;

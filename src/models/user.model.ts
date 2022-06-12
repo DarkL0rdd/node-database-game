@@ -18,7 +18,7 @@ import { DataType } from "sequelize-typescript";
 import { Role } from "../models/role.model";
 export interface UserAttributes {
   id?: number;
-  //role_id?: number;
+  role_id?: number;
   first_name: string;
   second_name: string;
   email: string;
@@ -43,7 +43,7 @@ export class User extends Model<User, UserAttributes> {
   })
   id: number;
 
-  /*@Unique(true)
+  @Unique(true)
   @AllowNull(false)
   @NotEmpty
   @IsInt
@@ -54,7 +54,7 @@ export class User extends Model<User, UserAttributes> {
   role_id: number;
 
   @BelongsTo(() => Role, "role_id")
-  role: Role;*/
+  role: Role;
 
   @AllowNull(false)
   @NotEmpty
