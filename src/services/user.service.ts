@@ -1,14 +1,18 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
+import { Role } from "../models/role.model";
 import { removeToken } from "../services/jwt.service";
 
 const userSequelize = sequelize.getRepository(User);
+const roleSequelize = sequelize.getRepository(Role);
 
 export const createUser = async (reqFirstName: string, reqSecondName: string, reqEmail: string, reqPassword: string) => {
   try {
+    const rolePlayer = await roleSequelize.findOne({ where: { role_name: "Player" } });
+    if (!rolePlayer) return;
     return await userSequelize.create({
       first_name: reqFirstName,
-      //role_id: +"", //!
+      role_id: rolePlayer.id,
       second_name: reqSecondName,
       email: reqEmail,
       password: reqPassword,
