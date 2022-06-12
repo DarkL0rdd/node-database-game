@@ -14,7 +14,8 @@ module.exports = {
       },
       role_id: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        notEmpty: true,
+        allowNull: false,
       },
       first_name: {
         type: DataTypes.STRING(50),

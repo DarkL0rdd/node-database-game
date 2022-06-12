@@ -44,7 +44,6 @@ export class User extends Model<User, UserAttributes> {
   })
   id: number;
 
-  @Unique(true)
   @AllowNull(false)
   @NotEmpty
   @IsInt
