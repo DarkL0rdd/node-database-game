@@ -58,6 +58,13 @@ export class User extends Model<User, UserAttributes> {
   role: Role;
 
   @AllowNull(false)
+  @IsInt
+  @Column({
+    type: DataType.INTEGER,
+  })
+  team_id: number;
+
+  @AllowNull(false)
   @NotEmpty
   @Column({
     type: DataType.STRING(50),
