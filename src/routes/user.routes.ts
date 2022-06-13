@@ -1,6 +1,6 @@
 import router, { Application } from "express";
 import {
-  registerUser,
+  registrationNewUser,
   loginUser,
   logoutUser,
   forgotPassword,
@@ -9,15 +9,17 @@ import {
   generateNewTokens,
   showInfoUser,
   updateInfoUser,
-  showInfoManager,
+  showInfoManagers,
   showInfoByIdManager,
+  showInfoPlayers,
+  showInfoByIdPlayer,
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 
 export const userRouter: Application = router();
 
 //user
-userRouter.post("/register", registerUser);
+userRouter.post("/register", registrationNewUser);
 userRouter.post("/login", loginUser);
 userRouter.all("/refresh", generateNewTokens); //? куди далі перейти ?
 userRouter.post("/logout", logoutUser);
@@ -29,12 +31,14 @@ userRouter.get("/profile", authenticateAccessToken, showInfoUser);
 userRouter.post("/profile/change-info", authenticateAccessToken, updateInfoUser);
 
 //admin
-userRouter.get("/profile/admin-panel/list-managers", authenticateAccessToken, showInfoManager);
+userRouter.get("/profile/admin-panel/list-managers", authenticateAccessToken, showInfoManagers);
 userRouter.get("/profile/admin-panel/list-managers/:id", authenticateAccessToken, showInfoByIdManager);
-userRouter.get("/profile/admin-panel/list-players", authenticateAccessToken);
-userRouter.get("/profile/admin-panel/list-players/:id", authenticateAccessToken);
+userRouter.get("/profile/admin-panel/list-players", authenticateAccessToken, showInfoPlayers);
+userRouter.get("/profile/admin-panel/list-players/:id", authenticateAccessToken, showInfoByIdPlayer);
 
 //manager
+userRouter.get("/profile/manager-panel/list-players", authenticateAccessToken, showInfoPlayers);
+userRouter.get("/profile/manager-panel/list-players/:id", authenticateAccessToken, showInfoByIdPlayer);
 
 //player
 

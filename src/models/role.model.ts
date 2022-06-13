@@ -1,4 +1,5 @@
 import {
+  DataType,
   Table,
   Model,
   Column,
@@ -13,8 +14,8 @@ import {
   HasMany,
   ForeignKey,
 } from "sequelize-typescript";
-import { DataType } from "sequelize-typescript";
 import { User } from "../models/user.model";
+
 export interface RoleAttributes {
   id: number;
   role: string;

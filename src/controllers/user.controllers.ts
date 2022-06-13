@@ -12,14 +12,16 @@ import {
   changeInfoUser,
   createUser,
   getAllUsers,
-  getInfoManager,
+  getInfoManagers,
   getInfoManagerById,
+  getInfoPlayerById,
+  getInfoPlayers,
   getInfoUser,
   logout,
 } from "../services/user.service";
 import jwt from "jsonwebtoken";
 
-export const registerUser = async (req: Request, res: Response) => {
+export const registrationNewUser = async (req: Request, res: Response) => {
   try {
     const userEmail = await compareUserEmail(req.body.email);
     if (userEmail) return res.status(500).send(`User with email ${req.body.email} already exist.`);
@@ -150,9 +152,9 @@ export const updateInfoUser = async (req: Request, res: Response) => {
   }
 };
 
-export const showInfoManager = async (req: Request, res: Response) => {
+export const showInfoManagers = async (req: Request, res: Response) => {
   try {
-    const manyManagers = await getInfoManager();
+    const manyManagers = await getInfoManagers();
     return res.json(manyManagers);
   } catch (error) {
     console.log(error);
@@ -163,6 +165,24 @@ export const showInfoByIdManager = async (req: Request, res: Response) => {
   try {
     const oneManager = await getInfoManagerById(req.params.id);
     return res.json(oneManager);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const showInfoPlayers = async (req: Request, res: Response) => {
+  try {
+    const manyPlayers = await getInfoPlayers();
+    return res.json(manyPlayers);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const showInfoByIdPlayer = async (req: Request, res: Response) => {
+  try {
+    const onePlayer = await getInfoPlayerById(req.params.id);
+    return res.json(onePlayer);
   } catch (error) {
     console.log(error);
   }
