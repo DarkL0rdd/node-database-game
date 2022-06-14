@@ -11,8 +11,7 @@ import {
   Unique,
   NotEmpty,
   IsInt,
-  HasMany,
-  ForeignKey,
+  HasOne,
 } from "sequelize-typescript";
 import { User } from "../models/user.model";
 
@@ -40,13 +39,15 @@ export class ManagerRequest extends Model<ManagerRequest, ManagerRequestAttribut
   })
   id: number;
 
-  @Unique(true)
-  @AllowNull(false)
+  /*@AllowNull(false)
   @NotEmpty
   @Column({
     type: DataType.INTEGER,
   })
-  user_id: number;
+  user_id: number;*/
+
+  @HasOne(() => User, "manager_request_id")
+  user: User;
 
   @AllowNull(false)
   @Column({

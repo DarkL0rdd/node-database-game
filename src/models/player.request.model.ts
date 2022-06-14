@@ -11,8 +11,7 @@ import {
   Unique,
   NotEmpty,
   IsInt,
-  HasMany,
-  ForeignKey,
+  HasOne,
 } from "sequelize-typescript";
 import { User } from "../models/user.model";
 
@@ -40,13 +39,16 @@ export class PlayerRequest extends Model<PlayerRequest, PlayerRequestAttributes>
   })
   id: number;
 
-  @Unique(true)
+  /*@Unique(true)
   @AllowNull(false)
   @NotEmpty
   @Column({
     type: DataType.INTEGER,
   })
-  user_id: number;
+  user_id: number;*/
+
+  @HasOne(() => User, "player_request_id")
+  user: User;
 
   @AllowNull(false)
   @Column({
