@@ -13,9 +13,9 @@ import {
   IsInt,
   HasOne,
 } from "sequelize-typescript";
-import { User } from "../models/user.model";
+import { User } from "./user.model";
 
-export interface PlayerRequestAttributes {
+export interface ManagerRequestAttributes {
   id: number;
   //user_id: number;
   request_type: string;
@@ -23,11 +23,11 @@ export interface PlayerRequestAttributes {
 }
 
 @Table({
-  tableName: "Players requests",
+  tableName: "Managers requests",
   timestamps: true,
   underscored: true,
 })
-export class PlayerRequest extends Model<PlayerRequest, PlayerRequestAttributes> {
+export class ManagerRequest extends Model<ManagerRequest, ManagerRequestAttributes> {
   @PrimaryKey
   @AutoIncrement
   @Unique(true)
@@ -47,14 +47,8 @@ export class PlayerRequest extends Model<PlayerRequest, PlayerRequestAttributes>
   })
   user_id: number;*/
 
-  @HasOne(() => User, "player_request_id")
+  @HasOne(() => User, "manager_request_id")
   user: User;
-
-  @AllowNull(false)
-  @Column({
-    type: DataType.STRING,
-  })
-  request_type: string;
 
   @AllowNull(false)
   @Column({

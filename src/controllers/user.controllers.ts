@@ -18,6 +18,9 @@ import {
   getInfoPlayers,
   getInfoUser,
   logout,
+  blockManager,
+  unblockManager,
+  changeRolePlayerToManager,
 } from "../services/user.service";
 import jwt from "jsonwebtoken";
 
@@ -136,8 +139,8 @@ export const showInfoUser = async (req: Request, res: Response) => {
   try {
     const oneUser = await getInfoUser(req.user.reqEmail);
     return res.json(oneUser);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -147,8 +150,8 @@ export const updateInfoUser = async (req: Request, res: Response) => {
       return res.status(200).send("Successful update info user.");
     }
     return res.status(500).send("Something went wrong.");
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -156,8 +159,8 @@ export const showInfoManagers = async (req: Request, res: Response) => {
   try {
     const manyManagers = await getInfoManagers();
     return res.json(manyManagers);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -165,8 +168,37 @@ export const showInfoByIdManager = async (req: Request, res: Response) => {
   try {
     const oneManager = await getInfoManagerById(req.params.id);
     return res.json(oneManager);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const giveNewRolePlayerToManager = async (req: Request, res: Response) => {
+  try {
+    if (await changeRolePlayerToManager(req.params.id)) {
+      return res.status(200).send("Successful change role player to manager.");
+    }
+    return res.status(500).send("Something went wrong.");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const banManagerById = async (req: Request, res: Response) => {
+  try {
+    const oneManager = await blockManager(req.params.id);
+    return res.json(oneManager);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const unbanManagerById = async (req: Request, res: Response) => {
+  try {
+    const oneManager = await unblockManager(req.params.id);
+    return res.json(oneManager);
+  } catch (err) {
+    console.log(err);
   }
 };
 

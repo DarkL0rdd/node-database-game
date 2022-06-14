@@ -7,9 +7,26 @@ import { hashUserPassword } from "./password.service";
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
 
+const enum UserRole {
+  admin = "admin",
+  manager = "manager",
+  player = "player",
+}
+
+const enum UserStatus {
+  active = "active",
+  blocked = "blocked",
+}
+
+const enum ManagerRequest {
+  approved = "approved",
+  declined = "declined",
+  pending = "pending",
+}
+
 export const createUser = async (reqFirstName: string, reqSecondName: string, reqEmail: string, reqPassword: string) => {
   try {
-    const rolePlayer = await roleSequelize.findOne({ where: { role_name: "Player" } });
+    const rolePlayer = await roleSequelize.findOne({ where: { role_name: UserRole.player } });
     if (!rolePlayer) return;
     return await userSequelize.create({
       first_name: reqFirstName,
@@ -17,7 +34,7 @@ export const createUser = async (reqFirstName: string, reqSecondName: string, re
       second_name: reqSecondName,
       email: reqEmail,
       password: reqPassword,
-      refresh_token: "",
+      status: UserStatus.active,
     });
   } catch (err) {
     console.log(err);
@@ -39,8 +56,8 @@ export const getInfoUser = async (userEmail: string) => {
       attributes: ["first_name", "second_name", "email"],
       include: [{ model: roleSequelize, attributes: ["role_name"] }],
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -68,8 +85,8 @@ export const changeInfoUser = async (
       },
       { where: { email: userEmail } }
     );
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -77,11 +94,11 @@ export const getInfoManagers = async () => {
   try {
     return await userSequelize.findAll({
       //attributes: ["first_name", "second_name", "email"],
-      include: [{ model: roleSequelize, /*attributes: ["role_name"],*/ where: { role_name: "Manager" } }],
+      include: [{ model: roleSequelize, /*attributes: ["role_name"],*/ where: { role_name: UserRole.manager } }],
       attributes: { exclude: ["password", "refresh_token"] },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -89,18 +106,46 @@ export const getInfoManagerById = async (managerId: string) => {
   try {
     return await userSequelize.findOne({
       where: { id: managerId },
-      include: [{ model: roleSequelize, where: { role_name: "Manager" } }],
+      include: [{ model: roleSequelize, where: { role_name: UserRole.manager } }],
       attributes: { exclude: ["password", "refresh_token"] },
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const changeRolePlayerToManager = async (playerId: string) => {
+  try {
+    userSequelize.findOne({
+      where: { id: playerId },
+      include: [{ model: roleSequelize, where: { role_name: UserRole.player } }],
+    });
+    return await userSequelize.update({ status: UserStatus.blocked }, { where: { id: playerId } });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const blockManager = async (managerId: string) => {
+  try {
+    return await userSequelize.update({ status: UserStatus.blocked }, { where: { id: managerId } });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const unblockManager = async (managerId: string) => {
+  try {
+    return await userSequelize.update({ status: UserStatus.active }, { where: { id: managerId } });
+  } catch (err) {
+    console.log(err);
   }
 };
 
 export const getInfoPlayers = async () => {
   try {
     return await userSequelize.findAll({
-      include: [{ model: roleSequelize, where: { role_name: "Player" } }],
+      include: [{ model: roleSequelize, where: { role_name: UserRole.player } }],
       attributes: { exclude: ["password", "refresh_token"] },
     });
   } catch (err) {

@@ -7,12 +7,7 @@ export const sequelize = new Sequelize(`${process.env.DB_NAME}`, `${process.env.
   logging: false,
   models: [__dirname + "/models/**/*.model.ts"],
   modelMatch: (filename, member) => {
+    console.log(filename, member);
     return filename.substring(0, filename.indexOf(".model")) === member.toLowerCase();
   },
 });
-/*sequelize
-  .sync({ force: true })
-  .then(() => console.log("Sync is OK"))
-  .catch((err) => {
-    console.log(err);
-  });*/

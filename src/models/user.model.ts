@@ -17,8 +17,8 @@ import {
 } from "sequelize-typescript";
 import { Role } from "../models/role.model";
 import { Team } from "./team.model";
-import { ManagerRequest } from "./manager.request.model";
-import { PlayerRequest } from "./player.request.model";
+import { ManagerRequest } from "./managerrequest.model";
+import { PlayerRequest } from "./playerrequest.model";
 
 export interface UserAttributes {
   id?: number;
@@ -34,6 +34,7 @@ export interface UserAttributes {
   email: string;
   password: string;
   status: string;
+  reason?: string;
   refresh_token?: string;
 }
 
@@ -135,6 +136,12 @@ export class User extends Model<User, UserAttributes> {
     type: DataType.STRING,
   })
   status: string;
+
+  @AllowNull(true)
+  @Column({
+    type: DataType.STRING,
+  })
+  reason: string;
 
   @AllowNull(true)
   @Column({
