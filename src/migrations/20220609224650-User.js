@@ -18,35 +18,50 @@ module.exports = {
         isInt: true,
         allowNull: false,
       },
+      manager_request_id: {
+        type: DataTypes.INTEGER,
+        isInt: true,
+        allowNull: true,
+      },
+      player_request_id: {
+        type: DataTypes.INTEGER,
+        isInt: true,
+        allowNull: true,
+      },
       team_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         isInt: true,
+        allowNull: true,
       },
       first_name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
       },
       second_name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
       },
       email: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         notEmpty: true,
         isEmail: true,
       },
       password: {
-        type: DataTypes.STRING(150),
+        type: DataTypes.STRING,
+        allowNull: false,
+        notEmpty: true,
+      },
+      status: {
+        type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
       },
       refresh_token: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.STRING,
         allowNull: true,
       },
       createdAt: {

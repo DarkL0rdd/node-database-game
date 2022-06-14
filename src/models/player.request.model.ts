@@ -17,7 +17,7 @@ import { User } from "../models/user.model";
 
 export interface PlayerRequestAttributes {
   id: number;
-  user_id: number;
+  //user_id: number;
   request_type: string;
   status: string;
 }

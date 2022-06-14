@@ -12,7 +12,6 @@ import {
   NotEmpty,
   IsInt,
   HasMany,
-  ForeignKey,
 } from "sequelize-typescript";
 import { User } from "../models/user.model";
 
@@ -42,7 +41,7 @@ export class Role extends Model<Role, RoleAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING(20),
+    type: DataType.STRING,
   })
   role_name: string;
 

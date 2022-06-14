@@ -9,7 +9,7 @@ module.exports = {
         second_name: "admin",
         email: "admin@gmail.com",
         password: `${await bcrypt.hashSync("admin", 8)}`,
-        refresh_token: "",
+        status: "active",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },

@@ -13,7 +13,7 @@ module.exports = {
         notEmpty: true,
       },
       role_name: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         notEmpty: true,

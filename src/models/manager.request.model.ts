@@ -17,7 +17,7 @@ import { User } from "../models/user.model";
 
 export interface ManagerRequestAttributes {
   id: number;
-  user_id: number;
+  //user_id: number;
   request_type: string;
   status: string;
 }
@@ -39,7 +39,8 @@ export class ManagerRequest extends Model<ManagerRequest, ManagerRequestAttribut
   })
   id: number;
 
-  /*@AllowNull(false)
+  /*@Unique(true)
+  @AllowNull(false)
   @NotEmpty
   @Column({
     type: DataType.INTEGER,
@@ -48,12 +49,6 @@ export class ManagerRequest extends Model<ManagerRequest, ManagerRequestAttribut
 
   @HasOne(() => User, "manager_request_id")
   user: User;
-
-  @AllowNull(false)
-  @Column({
-    type: DataType.STRING,
-  })
-  request_type: string;
 
   @AllowNull(false)
   @Column({

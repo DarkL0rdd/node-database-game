@@ -12,7 +12,6 @@ import {
   NotEmpty,
   IsInt,
   HasMany,
-  ForeignKey,
 } from "sequelize-typescript";
 import { User } from "../models/user.model";
 
@@ -45,6 +44,9 @@ export class Team extends Model<Team, TeamAttributes> {
     type: DataType.STRING,
   })
   team_name: string;
+
+  @HasMany(() => User, "team_id")
+  users: User[];
 
   @CreatedAt
   createdAt: Date;

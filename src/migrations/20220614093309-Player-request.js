@@ -12,12 +12,12 @@ module.exports = {
         isInt: true,
         notEmpty: true,
       },
-      user_id: {
+      /*user_id: {
         type: DataTypes.INTEGER,
         unique: true,
         allowNull: false,
         notEmpty: true,
-      },
+      },*/
       request_type: {
         type: DataTypes.STRING,
         allowNull: false,
