@@ -20,6 +20,7 @@ import { Role } from "../models/role.model";
 export interface UserAttributes {
   id?: number;
   role_id: number;
+  team_id?: number;
   role?: Role;
   first_name: string;
   second_name: string;
