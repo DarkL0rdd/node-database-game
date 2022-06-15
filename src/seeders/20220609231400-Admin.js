@@ -4,12 +4,12 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert("Users", [
       {
-        role_id: "1",
+        role_id: 1,
         first_name: "admin",
         second_name: "admin",
         email: "admin@gmail.com",
         password: `${await bcrypt.hashSync("admin", 8)}`,
-        status: "active",
+        status: "Active",
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       },

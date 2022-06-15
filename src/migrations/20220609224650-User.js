@@ -18,12 +18,7 @@ module.exports = {
         isInt: true,
         allowNull: false,
       },
-      manager_request_id: {
-        type: DataTypes.INTEGER,
-        isInt: true,
-        allowNull: true,
-      },
-      player_request_id: {
+      user_request_id: {
         type: DataTypes.INTEGER,
         isInt: true,
         allowNull: true,
@@ -59,6 +54,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
+      },
+      reason: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       refresh_token: {
         type: DataTypes.STRING,

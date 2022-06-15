@@ -11,23 +11,22 @@ import {
   Unique,
   NotEmpty,
   IsInt,
-  HasOne,
+  HasMany,
 } from "sequelize-typescript";
 import { User } from "./user.model";
 
-export interface ManagerRequestAttributes {
+export interface RequestAttributes {
   id: number;
-  //user_id: number;
   request_type: string;
   status: string;
 }
 
 @Table({
-  tableName: "Managers requests",
+  tableName: "Requests",
   timestamps: true,
   underscored: true,
 })
-export class ManagerRequest extends Model<ManagerRequest, ManagerRequestAttributes> {
+export class Request extends Model<Request, RequestAttributes> {
   @PrimaryKey
   @AutoIncrement
   @Unique(true)
@@ -39,22 +38,20 @@ export class ManagerRequest extends Model<ManagerRequest, ManagerRequestAttribut
   })
   id: number;
 
-  /*@Unique(true)
   @AllowNull(false)
-  @NotEmpty
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  user_id: number;*/
-
-  @HasOne(() => User, "manager_request_id")
-  user: User;
+  request_type: string;
 
   @AllowNull(false)
   @Column({
     type: DataType.STRING,
   })
   status: string;
+
+  @HasMany(() => User, "user_request_id")
+  user: User[];
 
   @CreatedAt
   createdAt: Date;

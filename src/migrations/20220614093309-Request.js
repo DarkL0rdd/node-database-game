@@ -2,7 +2,7 @@
 const { DataTypes } = require("sequelize");
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable("Managers requests", {
+    return queryInterface.createTable("Requests", {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -12,12 +12,10 @@ module.exports = {
         isInt: true,
         notEmpty: true,
       },
-      /*user_id: {
-        type: DataTypes.INTEGER,
-        unique: true,
+      request_type: {
+        type: DataTypes.STRING,
         allowNull: false,
-        notEmpty: true,
-      },*/
+      },
       status: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -40,6 +38,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.dropTable("Managers requests");
+    return queryInterface.dropTable("Requests");
   },
 };

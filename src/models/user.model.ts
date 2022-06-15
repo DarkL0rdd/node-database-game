@@ -17,18 +17,16 @@ import {
 } from "sequelize-typescript";
 import { Role } from "../models/role.model";
 import { Team } from "./team.model";
-import { ManagerRequest } from "./managerrequest.model";
-import { PlayerRequest } from "./playerrequest.model";
+import { Request } from "./request.model";
 
 export interface UserAttributes {
   id?: number;
   role_id?: number;
-  manager_request_id?: number;
-  manager_request?: ManagerRequest;
-  player_request_id?: number;
-  player_request?: PlayerRequest;
-  team_id?: number;
   role?: Role;
+  user_request_id?: number;
+  user_request?: Request;
+  team_id?: number;
+  team?: Team;
   first_name: string;
   second_name: string;
   email: string;
@@ -69,25 +67,14 @@ export class User extends Model<User, UserAttributes> {
 
   @AllowNull(true)
   @IsInt
-  @ForeignKey(() => ManagerRequest)
+  @ForeignKey(() => Request)
   @Column({
     type: DataType.INTEGER,
   })
-  manager_request_id: number;
+  user_request_id: number;
 
-  @BelongsTo(() => ManagerRequest, "manager_request_id")
-  manager_request: ManagerRequest;
-
-  @AllowNull(true)
-  @IsInt
-  @ForeignKey(() => PlayerRequest)
-  @Column({
-    type: DataType.INTEGER,
-  })
-  player_request_id: number;
-
-  @BelongsTo(() => PlayerRequest, "player_request_id")
-  player_request: PlayerRequest;
+  @BelongsTo(() => Request, "user_request_id")
+  user_request: Request;
 
   @AllowNull(true)
   @IsInt
