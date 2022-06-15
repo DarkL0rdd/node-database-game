@@ -23,7 +23,7 @@ const findUserPassword = async (reqEmail: string) => {
     if (emailFind?.email) {
       return emailFind.password;
     } else {
-      return null;
+      return undefined;
     }
   } catch (err) {
     console.log(err);

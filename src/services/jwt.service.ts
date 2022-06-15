@@ -37,7 +37,7 @@ export const saveToken = async (reqUserId: number, refreshToken: string) => {
 export const removeToken = async (refreshToken: string) => {
   try {
     return await userSequelize.update(
-      { refresh_token: "" },
+      { refresh_token: undefined },
       {
         where: { refresh_token: refreshToken },
       }

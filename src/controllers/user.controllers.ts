@@ -11,15 +11,15 @@ import {
 import {
   changeInfoUser,
   createUser,
-  getAllUsers,
+  getInfoAllUsers,
   getInfoManagers,
   getInfoManagerById,
   getInfoPlayerById,
   getInfoPlayers,
   getInfoUser,
   logout,
-  blockManager,
-  unblockManager,
+  blockUser,
+  unblockUser,
   changeRolePlayerToManager,
 } from "../services/user.service";
 import jwt from "jsonwebtoken";
@@ -32,9 +32,8 @@ export const registrationNewUser = async (req: Request, res: Response) => {
     if (hashPassword) {
       const newUser = await createUser(req.body.first_name, req.body.second_name, req.body.email, hashPassword);
       if (newUser) return res.status(200).send("Successful registration.");
-    } else {
-      return res.status(500).send();
     }
+    return res.status(500).send();
   } catch (err) {
     console.log(err);
     res.status(500).send();
@@ -81,7 +80,7 @@ export const logoutUser = async (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
-    const allUsers = await getAllUsers();
+    const allUsers = await getInfoAllUsers();
     return res.json(allUsers);
   } catch (err) {
     console.log(err);
@@ -147,27 +146,9 @@ export const showInfoUser = async (req: Request, res: Response) => {
 export const updateInfoUser = async (req: Request, res: Response) => {
   try {
     if (await changeInfoUser(req.user.reqEmail, req.body.first_name, req.body.second_name, req.body.email, req.body.password)) {
-      return res.status(200).send("Successful update info user.");
+      return res.status(200).json({ Message: "Successful update info user." });
     }
-    return res.status(500).send("Something went wrong.");
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const showInfoManagers = async (req: Request, res: Response) => {
-  try {
-    const manyManagers = await getInfoManagers();
-    return res.json(manyManagers);
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-export const showInfoByIdManager = async (req: Request, res: Response) => {
-  try {
-    const oneManager = await getInfoManagerById(req.params.id);
-    return res.json(oneManager);
+    return res.status(500).json({ Message: "Something went wrong." });
   } catch (err) {
     console.log(err);
   }
@@ -176,45 +157,118 @@ export const showInfoByIdManager = async (req: Request, res: Response) => {
 export const giveNewRolePlayerToManager = async (req: Request, res: Response) => {
   try {
     if (await changeRolePlayerToManager(req.params.id)) {
-      return res.status(200).send("Successful change role player to manager.");
+      return res.status(200).json({ Message: "Successful change role Player to Manager." });
     }
-    return res.status(500).send("Something went wrong.");
+    return res.status(500).json({ Message: "Something went wrong." });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const banManagerById = async (req: Request, res: Response) => {
+export const giveNewRoleManagerToPlayer = async (req: Request, res: Response) => {
   try {
-    const oneManager = await blockManager(req.params.id);
-    return res.json(oneManager);
+    if (await changeRolePlayerToManager(req.params.id)) {
+      return res.status(200).json({ Message: "Successful change role Manager to Player." });
+    }
+    return res.status(500).json({ Message: "Something went wrong." });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const unbanManagerById = async (req: Request, res: Response) => {
+export const banUserById = async (req: Request, res: Response) => {
   try {
-    const oneManager = await unblockManager(req.params.id);
-    return res.json(oneManager);
+    const list = req.params.list;
+    let user = undefined;
+    switch (list) {
+      case "list-managers":
+        {
+          user = await blockUser(req.params.id, req.body.reason);
+        }
+        break;
+      case "list-players":
+        {
+          user = await blockUser(req.params.id, req.body.reason);
+        }
+        break;
+      default:
+        break;
+    }
+    return res.status(200).json({ Message: `User #${req.params.id} is blocked.` });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const showInfoPlayers = async (req: Request, res: Response) => {
+export const unbanUserById = async (req: Request, res: Response) => {
   try {
-    const manyPlayers = await getInfoPlayers();
-    return res.json(manyPlayers);
+    const list = req.params.list;
+    let user = undefined;
+    switch (list) {
+      case "list-managers":
+        {
+          user = await unblockUser(req.params.id, req.body.reason);
+        }
+        break;
+      case "list-players":
+        {
+          user = await unblockUser(req.params.id, req.body.reason);
+        }
+        break;
+      default:
+        break;
+    }
+    return res.status(200).json({ Message: `User #${req.params.id} is unblocked.` });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const showInfoAllUsers = async (req: Request, res: Response) => {
+  try {
+    const list = req.params.list;
+    let users = undefined;
+    switch (list) {
+      case "list-managers":
+        {
+          users = await getInfoManagers();
+        }
+        break;
+      case "list-players":
+        {
+          users = await getInfoPlayers();
+        }
+        break;
+      default:
+        users = await getInfoAllUsers();
+        break;
+    }
+    return res.json(users);
   } catch (error) {
     console.log(error);
   }
 };
 
-export const showInfoByIdPlayer = async (req: Request, res: Response) => {
+export const showInfoByIdUser = async (req: Request, res: Response) => {
   try {
-    const onePlayer = await getInfoPlayerById(req.params.id);
-    return res.json(onePlayer);
+    const list = req.params.list;
+    let user = undefined;
+    switch (list) {
+      case "list-managers":
+        {
+          user = await getInfoManagerById(req.params.id);
+        }
+        break;
+      case "list-players":
+        {
+          user = await getInfoPlayerById(req.params.id);
+        }
+        break;
+      default:
+        user = await getInfoUser(req.user.reqEmail);
+        break;
+    }
+    return res.json(user);
   } catch (error) {
     console.log(error);
   }

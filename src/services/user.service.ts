@@ -8,20 +8,24 @@ const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
 
 const enum UserRole {
-  admin = "admin",
-  manager = "manager",
-  player = "player",
+  admin = "Admin",
+  manager = "Manager",
+  player = "Player",
 }
 
 const enum UserStatus {
-  active = "active",
-  blocked = "blocked",
+  active = "Active",
+  blocked = "Blocked",
 }
 
-const enum ManagerRequest {
-  approved = "approved",
-  declined = "declined",
-  pending = "pending",
+const enum ManagerRequest {}
+
+const enum PlayerRequest {}
+
+const enum StatusRequest {
+  approved = "Approved",
+  declined = "Declined",
+  pending = "Pending",
 }
 
 export const createUser = async (reqFirstName: string, reqSecondName: string, reqEmail: string, reqPassword: string) => {
@@ -116,27 +120,35 @@ export const getInfoManagerById = async (managerId: string) => {
 
 export const changeRolePlayerToManager = async (playerId: string) => {
   try {
-    userSequelize.findOne({
-      where: { id: playerId },
-      include: [{ model: roleSequelize, where: { role_name: UserRole.player } }],
-    });
-    return await userSequelize.update({ status: UserStatus.blocked }, { where: { id: playerId } });
+    const roleManager = await roleSequelize.findOne({ where: { role_name: UserRole.manager } });
+    if (!roleManager) return;
+    return await userSequelize.update({ role_id: roleManager.id }, { where: { id: playerId } });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const blockManager = async (managerId: string) => {
+export const changeRoleManagerToPlayer = async (managerId: string) => {
   try {
-    return await userSequelize.update({ status: UserStatus.blocked }, { where: { id: managerId } });
+    const rolePlayer = await roleSequelize.findOne({ where: { role_name: UserRole.player } });
+    if (!rolePlayer) return;
+    return await userSequelize.update({ role_id: rolePlayer.id }, { where: { id: managerId } });
   } catch (err) {
     console.log(err);
   }
 };
 
-export const unblockManager = async (managerId: string) => {
+export const blockUser = async (userId: string, msgReason?: string) => {
   try {
-    return await userSequelize.update({ status: UserStatus.active }, { where: { id: managerId } });
+    return await userSequelize.update({ status: UserStatus.blocked, reason: msgReason }, { where: { id: userId } });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const unblockUser = async (userId: string, msgReason?: string) => {
+  try {
+    return await userSequelize.update({ status: UserStatus.active, reason: msgReason }, { where: { id: userId } });
   } catch (err) {
     console.log(err);
   }
@@ -157,7 +169,7 @@ export const getInfoPlayerById = async (playerId: string) => {
   try {
     return await userSequelize.findOne({
       where: { id: playerId },
-      include: [{ model: roleSequelize, where: { role_name: "Player" } }],
+      include: [{ model: roleSequelize, where: { role_name: UserRole.player } }],
       attributes: { exclude: ["password", "refresh_token"] },
     });
   } catch (err) {
@@ -166,12 +178,34 @@ export const getInfoPlayerById = async (playerId: string) => {
 };
 
 //test
-export const getAllUsers = async () => {
+export const getInfoAllUsers = async () => {
   try {
     return await userSequelize.findAll({
       include: [{ model: roleSequelize }],
       attributes: { exclude: ["password", "refresh_token"] },
     });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const sendRequestAddInTeam = async (playerId: string) => {
+  try {
+    const player = await getInfoPlayerById(playerId);
+    if (!player) return;
+    return await userSequelize.update(
+      {
+        status: StatusRequest.pending,
+        reason: `#${player.id} ${player.first_name} ${player.second_name} wants to join the team`, //name team + id team
+      },
+      { where: { id: playerId } }
+
+      // {
+      //   where: { id: managerId },
+      //   include: [{ model: userSequelize, where: { id: playerId } }],
+      //   attributes: { exclude: ["password", "refresh_token"] },
+      // }
+    );
   } catch (err) {
     console.log(err);
   }
