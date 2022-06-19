@@ -18,11 +18,6 @@ module.exports = {
         isInt: true,
         allowNull: false,
       },
-      user_request_id: {
-        type: DataTypes.INTEGER,
-        isInt: true,
-        allowNull: true,
-      },
       team_id: {
         type: DataTypes.INTEGER,
         isInt: true,

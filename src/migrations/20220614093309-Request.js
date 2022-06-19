@@ -12,7 +12,17 @@ module.exports = {
         isInt: true,
         notEmpty: true,
       },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        notEmpty: true,
+        isInt: true,
+      },
       request_type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: {
         type: DataTypes.STRING,
         allowNull: false,
       },

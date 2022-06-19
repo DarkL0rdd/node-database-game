@@ -16,7 +16,7 @@ import {
 import { User } from "../models/user.model";
 
 export interface TeamAttributes {
-  id: number;
+  id?: number;
   team_name: string;
 }
 

@@ -12,12 +12,16 @@ import {
   NotEmpty,
   IsInt,
   HasMany,
+  ForeignKey,
+  BelongsTo,
 } from "sequelize-typescript";
 import { User } from "./user.model";
 
-export interface RequestAttributes {
-  id: number;
+export interface UserRequestAttributes {
+  id?: number;
+  user_id: number;
   request_type: string;
+  description: string;
   status: string;
 }
 
@@ -26,7 +30,7 @@ export interface RequestAttributes {
   timestamps: true,
   underscored: true,
 })
-export class Request extends Model<Request, RequestAttributes> {
+export class UserRequest extends Model<UserRequest, UserRequestAttributes> {
   @PrimaryKey
   @AutoIncrement
   @Unique(true)
@@ -39,19 +43,34 @@ export class Request extends Model<Request, RequestAttributes> {
   id: number;
 
   @AllowNull(false)
+  @NotEmpty
+  @IsInt
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  user_id: number;
+
+  @BelongsTo(() => User, "user_id")
+  user: User;
+
+  @AllowNull(false)
   @Column({
     type: DataType.STRING,
   })
   request_type: string;
+
+  @AllowNull(true)
+  @Column({
+    type: DataType.STRING,
+  })
+  description: string;
 
   @AllowNull(false)
   @Column({
     type: DataType.STRING,
   })
   status: string;
-
-  @HasMany(() => User, "user_request_id")
-  user: User[];
 
   @CreatedAt
   createdAt: Date;

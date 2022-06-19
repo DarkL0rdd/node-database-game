@@ -16,7 +16,7 @@ import {
 import { User } from "../models/user.model";
 
 export interface RoleAttributes {
-  id: number;
+  id?: number;
   role: string;
 }
 

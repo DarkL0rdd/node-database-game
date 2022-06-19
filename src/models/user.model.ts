@@ -14,17 +14,16 @@ import {
   IsInt,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from "sequelize-typescript";
 import { Role } from "../models/role.model";
 import { Team } from "./team.model";
-import { Request } from "./request.model";
+import { UserRequest } from "./userrequest.model";
 
 export interface UserAttributes {
   id?: number;
   role_id?: number;
   role?: Role;
-  user_request_id?: number;
-  user_request?: Request;
   team_id?: number;
   team?: Team;
   first_name: string;
@@ -65,16 +64,8 @@ export class User extends Model<User, UserAttributes> {
   @BelongsTo(() => Role, "role_id")
   role: Role;
 
-  @AllowNull(true)
-  @IsInt
-  @ForeignKey(() => Request)
-  @Column({
-    type: DataType.INTEGER,
-  })
-  user_request_id: number;
-
-  @BelongsTo(() => Request, "user_request_id")
-  user_request: Request;
+  @HasMany(() => UserRequest, "user_id")
+  user_requests: UserRequest[];
 
   @AllowNull(true)
   @IsInt
