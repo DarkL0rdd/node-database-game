@@ -40,7 +40,7 @@ userRouter.post(
   updateInfoUserProfile
 );
 
-//!Lsit of params: admin-panel, manager-panel, player-panel | list-admins, list-managers, list-players
+//!List of params: admin-panel, manager-panel, player-panel | list-admins, list-managers, list-players
 
 userRouter.get(
   //!All: Show list of admins or managers or players
@@ -63,15 +63,15 @@ userRouter.post("/profile/admin-panel/:list/:id/unban", authenticateAccessToken,
 
 userRouter.post(
   //!Manager, Player: Create new request
-  "/profile/:panel/list-requests/new-request",
+  "/profile/:panel/my-list-requests/new-request",
   authenticateAccessToken,
   checkRole(UserRole.Manager, UserRole.Player),
   createNewRequest
 );
 
-//!Admin, Manager: Show list of requests
+//!Admin, Manager: Show list of requests(managers or players)
 //userRouter.get("/profile/:panel/list-requests", authenticateAccessToken, checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player), showAllRequests);
-//!Admin, Manager: Show list of requests by ID
+//!Admin, Manager: Show one requests by ID(manager or player)
 //userRouter.get("/profile/:panel/list-requests/:id", authenticateAccessToken, checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player), showRequestById);
 
 //!Manager, Player: Show list of OWN requests
@@ -90,3 +90,4 @@ userRouter.post(
 //userRouter.post("/profile/:panel/:list/:id/delete-from-team", authenticateAccessToken, checkRole(UserRole.Admin), deletePlayerFromTeam);
 
 //!(Manager???), Player: Cancel request
+//userRouter.post("/profile/:panel/my-list-requests/:id", authenticateAccessToken, checkRole(UserRole.Admin), cancelRequest);
