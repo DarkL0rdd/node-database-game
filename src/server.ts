@@ -5,6 +5,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { userRouter } from "./routes/user.routes";
 import cookieParser from "cookie-parser";
+import { requestRouter } from "./routes/request.routes";
 
 const app: Application = express();
 const httpServer = createServer(app);
@@ -45,6 +46,7 @@ try {
 }
 
 app.use("/user", userRouter);
+app.use("/request", requestRouter);
 
 app.use(express.static("src/html"));
 
