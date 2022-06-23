@@ -69,3 +69,45 @@ export const changeInfoUserProfile = async (
     { where: { email: userEmail } }
   );
 };
+
+const findAllUsersByRole = async (roleName: string) => {
+  const users = await userSequelize.findAll({
+    //attributes: ["first_name", "second_name", "email"],
+    include: [{ model: roleSequelize, /*attributes: ["role_name"],*/ where: { role_name: roleName } }],
+    attributes: { exclude: ["password", "refresh_token"] },
+  });
+  if (!users) throw new CustomError(500, "Users not found.");
+  return users;
+};
+
+export const getInfoAllUsersByRole = async (typeList: string) => {
+  if (typeList === List.AdminList) {
+    return await findAllUsersByRole(UserRole.Admin);
+  } else if (typeList === List.ManagerList) {
+    return await findAllUsersByRole(UserRole.Manager);
+  } else if (typeList === List.PlayerList) {
+    return await findAllUsersByRole(UserRole.Player);
+  }
+  throw new CustomError(400, "Wrong type list.");
+};
+
+const findOneUserByRoleAndId = async (roleName: string, userId: string) => {
+  const user = await userSequelize.findOne({
+    where: { id: userId },
+    include: [{ model: roleSequelize, where: { role_name: roleName } }],
+    attributes: { exclude: ["password", "refresh_token"] },
+  });
+  if (!user) throw new CustomError(404, "User not found.");
+  return user;
+};
+
+export const getInfoOneUserByRoleAndId = async (typeList: string, userId: string) => {
+  if (typeList === List.AdminList) {
+    return await findOneUserByRoleAndId(UserRole.Admin, userId);
+  } else if (typeList === List.ManagerList) {
+    return await findOneUserByRoleAndId(UserRole.Manager, userId);
+  } else if (typeList === List.PlayerList) {
+    return await findOneUserByRoleAndId(UserRole.Player, userId);
+  }
+  throw new CustomError(400, "Wrong type list.");
+};

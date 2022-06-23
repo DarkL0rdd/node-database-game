@@ -130,3 +130,24 @@ export const updateInfoUserProfile = async (req: Request, res: Response) => {
     res.status(500).json({ Message: err.message });
   }
 };
+
+export const showInfoAllUsersByRole = async (req: Request, res: Response) => {
+  try {
+    const users = await getInfoAllUsersByRole(req.params.list);
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Message: err.message });
+  }
+};
+
+export const showInfoUserByRoleAndId = async (req: Request, res: Response) => {
+  try {
+    const user = await getInfoOneUserByRoleAndId(req.params.list, req.params.id);
+    if (!user) return res.status(404).json({ Message: "User is not found." });
+    return res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Message: err.message });
+  }
+};
