@@ -68,7 +68,6 @@ export class User extends Model<User, UserAttributes> {
   user_requests: UserRequest[];
 
   @AllowNull(true)
-  @IsInt
   @ForeignKey(() => Team)
   @Column({
     type: DataType.INTEGER,
