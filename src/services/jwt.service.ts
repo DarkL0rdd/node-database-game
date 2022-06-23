@@ -7,13 +7,13 @@ const userSequelize = sequelize.getRepository(User);
 
 export const generateAccessToken = async (reqEmail: string, timeAccesss: string) => {
   const accessToken = jwt.sign({ reqEmail }, `${process.env.ACCESS_SECRET_KEY}`, { expiresIn: timeAccesss });
-  if (!accessToken) throw new CustomError(500, "Error generate access token.");
+  if (!accessToken) throw new CustomError(500, "Error generate access token."); // throw new CustomError(500, "Server error.");
   return accessToken;
 };
 
 export const generateRefreshToken = async (reqEmail: string, timeRefresh: string) => {
   const refreshToken = jwt.sign({ reqEmail }, `${process.env.REFRESH_SECRET_KEY}`, { expiresIn: timeRefresh });
-  if (!refreshToken) throw new CustomError(500, "Error generate refresh token.");
+  if (!refreshToken) throw new CustomError(500, "Error generate refresh token."); // throw new CustomError(500, "Server error.");
   return refreshToken;
 };
 
