@@ -151,3 +151,23 @@ export const showInfoUserByRoleAndId = async (req: Request, res: Response) => {
     res.status(500).json({ Message: err.message });
   }
 };
+
+export const banUser = async (req: Request, res: Response) => {
+  try {
+    const user = await blockUserById(req.params.list, req.params.id, req.body.reason);
+    res.status(200).json({ Message: `User with id #${req.params.id} is blocked.` });
+  } catch (err) {
+    console.log(err);
+    res.status(401).json({ Message: err.message });
+  }
+};
+
+export const unbanUser = async (req: Request, res: Response) => {
+  try {
+    const user = await unblockUserById(req.params.list, req.params.id, req.body.reason);
+    res.status(200).json({ Message: `User with id #${req.params.id} is unblocked.` });
+  } catch (err) {
+    console.log(err);
+    res.status(401).json({ Message: err.message });
+  }
+};
