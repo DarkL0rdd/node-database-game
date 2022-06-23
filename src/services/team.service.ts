@@ -27,3 +27,16 @@ export const getInfoTeamById = async (teamId: string) => {
   if (!team) throw new CustomError(404, "Team not found.");
   return team;
 };
+
+export const deletePlayerFromTeamById = async (userId: string, teamId: string) => {
+  const user = await userSequelize.findOne({
+    where: { id: userId },
+    attributes: ["id", "team_id"],
+    include: [{ model: teamSequelize, where: { id: teamId } }],
+  });
+
+  console.log(user?.toJSON());
+
+  if (!user) throw new CustomError(404, "User not found.");
+  return await user.update({ team_id: 0 }); //! undefined
+};
