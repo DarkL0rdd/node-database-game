@@ -17,7 +17,7 @@ module.exports = {
       },
       {
         role_id: 2,
-        team_id: undefined,
+        team_id: 3,
         first_name: "test2",
         second_name: "test2",
         email: "test2@gmail.com",
@@ -29,7 +29,7 @@ module.exports = {
       },
       {
         role_id: 3,
-        team_id: undefined,
+        team_id: 3,
         first_name: "test3",
         second_name: "test3",
         email: "test3@gmail.com",
@@ -53,7 +53,7 @@ module.exports = {
       },
       {
         role_id: 2,
-        team_id: undefined,
+        team_id: 2,
         first_name: "test5",
         second_name: "test5",
         email: "test5@gmail.com",
@@ -65,7 +65,7 @@ module.exports = {
       },
       {
         role_id: 3,
-        team_id: undefined,
+        team_id: 2,
         first_name: "test6",
         second_name: "test6",
         email: "test6@gmail.com",

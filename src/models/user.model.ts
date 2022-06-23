@@ -22,7 +22,7 @@ import { UserRequest } from "./userrequest.model";
 
 export interface UserAttributes {
   id?: number;
-  role_id?: number;
+  role_id: number;
   role?: Role;
   team_id?: number;
   team?: Team;

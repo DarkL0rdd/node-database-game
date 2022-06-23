@@ -20,8 +20,8 @@ module.exports = {
       },
       team_id: {
         type: DataTypes.INTEGER,
-        isInt: true,
         allowNull: true,
+        isInt: true,
       },
       first_name: {
         type: DataTypes.STRING,
