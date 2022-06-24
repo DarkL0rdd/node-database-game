@@ -6,7 +6,7 @@ import { Team } from "../models/team.model";
 import { removeRefreshToken } from "../services/jwt.service";
 import { hashUserPassword } from "./password.service";
 import { CustomError } from "./error.service";
-import { HashRound, List, UserRole, UserStatus } from "./all.enums";
+import { HashRound, ParamsList, UserRole, UserStatus } from "./all.enums";
 
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
@@ -81,12 +81,15 @@ const findAllUsersByRole = async (roleName: string) => {
 };
 
 export const getInfoAllUsersByRole = async (typeList: string) => {
-  if (typeList === List.AdminList) {
-    return await findAllUsersByRole(UserRole.Admin);
-  } else if (typeList === List.ManagerList) {
-    return await findAllUsersByRole(UserRole.Manager);
-  } else if (typeList === List.PlayerList) {
-    return await findAllUsersByRole(UserRole.Player);
+  const objList: any = {
+    [ParamsList.AdminList]: [findAllUsersByRole, UserRole.Admin],
+    [ParamsList.ManagerList]: [findAllUsersByRole, UserRole.Manager],
+    [ParamsList.PlayerList]: [findAllUsersByRole, UserRole.Player],
+  };
+  for (let key in objList) {
+    if (key === typeList) {
+      return await objList[key][0](objList[key][1]);
+    }
   }
   throw new CustomError(400, "Wrong type list.");
 };
@@ -102,12 +105,15 @@ const findOneUserByRoleAndId = async (roleName: string, userId: string) => {
 };
 
 export const getInfoOneUserByRoleAndId = async (typeList: string, userId: string) => {
-  if (typeList === List.AdminList) {
-    return await findOneUserByRoleAndId(UserRole.Admin, userId);
-  } else if (typeList === List.ManagerList) {
-    return await findOneUserByRoleAndId(UserRole.Manager, userId);
-  } else if (typeList === List.PlayerList) {
-    return await findOneUserByRoleAndId(UserRole.Player, userId);
+  const objList: any = {
+    [ParamsList.AdminList]: [findOneUserByRoleAndId, UserRole.Admin, userId],
+    [ParamsList.ManagerList]: [findOneUserByRoleAndId, UserRole.Manager, userId],
+    [ParamsList.PlayerList]: [findOneUserByRoleAndId, UserRole.Player, userId],
+  };
+  for (let key in objList) {
+    if (key === typeList) {
+      return await objList[key][0](objList[key][1], objList[key][2]);
+    }
   }
   throw new CustomError(400, "Wrong type list.");
 };
