@@ -15,7 +15,7 @@ import {
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
-import { validatePanel } from "../middleware/validate.list";
+import { validatePanel } from "../middleware/validate.params";
 import { UserRole } from "../services/all.enums";
 
 export const userRouter: Application = router();

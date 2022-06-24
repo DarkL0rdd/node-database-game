@@ -1,7 +1,7 @@
 import router, { Application } from "express";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
-import { validatePanel } from "../middleware/validate.list";
+import { validatePanel } from "../middleware/validate.params";
 import { UserRole } from "../services/all.enums";
 import { deletePlayerFromTeam, showInfoAllTeams, showInfoTeamById } from "../controllers/team.controllers";
 

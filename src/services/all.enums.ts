@@ -20,6 +20,7 @@ export enum PlayerRequest {
   AddToTeam = "Add to the team",
   ExitTeam = "Exit from team",
   ChangeTeam = "Change team",
+  UnbanProfile = "Unban profile",
 }
 
 export const enum RequestStatus {
@@ -34,7 +35,7 @@ export const enum Panel {
   PlayerPanel = "player-panel",
 }
 
-export const enum List {
+export enum ParamsList {
   AdminList = "list-admins",
   ManagerList = "list-managers",
   PlayerList = "list-players",
