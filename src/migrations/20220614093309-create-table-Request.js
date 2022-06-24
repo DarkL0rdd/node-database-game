@@ -22,6 +22,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      team_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       description: {
         type: DataTypes.STRING,
         allowNull: false,

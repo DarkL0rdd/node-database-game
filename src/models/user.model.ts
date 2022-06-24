@@ -72,7 +72,7 @@ export class User extends Model<User, UserAttributes> {
   @Column({
     type: DataType.INTEGER,
   })
-  team_id: number;
+  team_id?: number;
 
   @BelongsTo(() => Team, "team_id")
   team: Team;
@@ -118,13 +118,13 @@ export class User extends Model<User, UserAttributes> {
   @Column({
     type: DataType.STRING,
   })
-  reason: string;
+  reason?: string;
 
   @AllowNull(true)
   @Column({
     type: DataType.STRING,
   })
-  refresh_token: string;
+  refresh_token?: string;
 
   @CreatedAt
   createdAt: Date;

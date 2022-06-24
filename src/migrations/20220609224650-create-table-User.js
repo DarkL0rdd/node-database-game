@@ -21,7 +21,6 @@ module.exports = {
       team_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        isInt: true,
       },
       first_name: {
         type: DataTypes.STRING,

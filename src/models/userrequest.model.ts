@@ -21,7 +21,8 @@ export interface UserRequestAttributes {
   id?: number;
   user_id: number;
   request_type: string;
-  description: string;
+  team_id?: number;
+  description?: string;
   status: string;
 }
 
@@ -59,6 +60,12 @@ export class UserRequest extends Model<UserRequest, UserRequestAttributes> {
     type: DataType.STRING,
   })
   request_type: string;
+
+  @AllowNull(true)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  team_id?: number;
 
   @AllowNull(true)
   @Column({
