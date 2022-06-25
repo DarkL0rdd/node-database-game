@@ -4,7 +4,7 @@ export const enum HashRound {
   EightRound = 8,
 }
 
-export const enum UserRole {
+export enum UserRole {
   Admin = "Admin",
   Manager = "Manager",
   Player = "Player",
@@ -27,19 +27,4 @@ export const enum RequestStatus {
   Approved = "Approved",
   Declined = "Declined",
   Pending = "Pending",
-}
-
-export const enum Panel {
-  AdminPanel = "admin-panel",
-  ManagerPanel = "manager-panel",
-  PlayerPanel = "player-panel",
-}
-
-export enum ParamsList {
-  AdminList = "list-admins",
-  ManagerList = "list-managers",
-  PlayerList = "list-players",
-  TeamList = "list-teams",
-  MyList = "my-list-requests",
-  AllList = "list-requests",
 }
