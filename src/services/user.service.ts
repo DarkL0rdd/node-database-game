@@ -3,10 +3,9 @@ import { User } from "../models/user.model";
 import { Role } from "../models/role.model";
 import { UserRequest } from "../models/userrequest.model";
 import { Team } from "../models/team.model";
-import { removeRefreshToken } from "../services/jwt.service";
 import { hashUserPassword } from "./password.service";
 import { CustomError } from "./error.service";
-import { HashRound, ParamsList, UserRole, UserStatus } from "./all.enums";
+import { HashRound, UserRole, UserStatus } from "./all.enums";
 
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
@@ -80,18 +79,10 @@ const findAllUsersByRole = async (roleName: string) => {
   return users;
 };
 
-export const getInfoAllUsersByRole = async (typeList: string) => {
-  const objList: any = {
-    [ParamsList.AdminList]: [findAllUsersByRole, UserRole.Admin],
-    [ParamsList.ManagerList]: [findAllUsersByRole, UserRole.Manager],
-    [ParamsList.PlayerList]: [findAllUsersByRole, UserRole.Player],
-  };
-  for (let key in objList) {
-    if (key === typeList) {
-      return await objList[key][0](objList[key][1]);
-    }
-  }
-  throw new CustomError(400, "Wrong type list.");
+export const getInfoAllUsersByRole = async (queryRole: string) => {
+  const users = await findAllUsersByRole(queryRole.charAt(0).toUpperCase() + queryRole.slice(1));
+  if (!users) throw new CustomError(400, "Wrong type list.");
+  return users;
 };
 
 const findOneUserByRoleAndId = async (roleName: string, userId: string) => {
@@ -104,28 +95,20 @@ const findOneUserByRoleAndId = async (roleName: string, userId: string) => {
   return user;
 };
 
-export const getInfoOneUserByRoleAndId = async (typeList: string, userId: string) => {
-  const objList: any = {
-    [ParamsList.AdminList]: [findOneUserByRoleAndId, UserRole.Admin, userId],
-    [ParamsList.ManagerList]: [findOneUserByRoleAndId, UserRole.Manager, userId],
-    [ParamsList.PlayerList]: [findOneUserByRoleAndId, UserRole.Player, userId],
-  };
-  for (let key in objList) {
-    if (key === typeList) {
-      return await objList[key][0](objList[key][1], objList[key][2]);
-    }
-  }
-  throw new CustomError(400, "Wrong type list.");
+export const getInfoOneUserByRoleAndId = async (queryRole: string, userId: string) => {
+  const user = await findOneUserByRoleAndId(queryRole.charAt(0).toUpperCase() + queryRole.slice(1), userId);
+  if (!user) throw new CustomError(400, "Wrong type list.");
+  return user;
 };
 
-export const blockUserById = async (typeList: string, userId: string, msgReason?: string) => {
-  const user = await getInfoOneUserByRoleAndId(typeList, userId);
+export const blockUserById = async (queryRole: string, userId: string, msgReason?: string) => {
+  const user = await getInfoOneUserByRoleAndId(queryRole, userId);
   if (!user) throw new CustomError(404, `User with id #${userId} not found.`);
   return await userSequelize.update({ status: UserStatus.Blocked, reason: msgReason }, { where: { id: userId } });
 };
 
-export const unblockUserById = async (typeList: string, userId: string, msgReason?: string) => {
-  const user = await getInfoOneUserByRoleAndId(typeList, userId);
+export const unblockUserById = async (queryRole: string, userId: string, msgReason?: string) => {
+  const user = await getInfoOneUserByRoleAndId(queryRole, userId);
   if (!user) throw new CustomError(404, `User with id #${userId} not found.`);
   return await userSequelize.update({ status: UserStatus.Active, reason: msgReason }, { where: { id: userId } });
 };

@@ -15,7 +15,7 @@ import {
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
-import { validatePanel } from "../middleware/validate.params";
+import { validateQueryParametrs } from "../middleware/validate.params";
 import { UserRole } from "../services/all.enums";
 
 export const userRouter: Application = router();
@@ -23,7 +23,7 @@ export const userRouter: Application = router();
 //User
 userRouter.post("/register", registrationNewUser);
 userRouter.post("/login", loginUser);
-userRouter.all("/refresh", generateNewTokens); //? куди далі перейти ?
+userRouter.all("/refresh", generateNewTokens);
 userRouter.post("/logout", logoutUser);
 userRouter.post("/forgot-password", forgotPassword);
 userRouter.post("/reset-password/:link", resetPassword);
@@ -40,26 +40,27 @@ userRouter.post(
   updateInfoUserProfile
 );
 
-//!List of params: admin-panel, manager-panel, player-panel | list-admins, list-managers, list-players, list-teams, list-requests, my-list-requests
+//List of query params: admin, manager, player
+// /?role=admin
 
 //All: Show list of admins/managers/players
 userRouter.get(
-  "/profile/:panel/:list",
+  "/list-users",
   authenticateAccessToken,
   checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
-  validatePanel(),
+  validateQueryParametrs(),
   showInfoAllUsersByRole
 );
 //All: Show one admin/manager/player by ID
 userRouter.get(
-  "/profile/:panel/:list/:id",
+  "/list-users/:id",
   authenticateAccessToken,
   checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
-  validatePanel(),
+  validateQueryParametrs(),
   showInfoUserByRoleAndId
 );
 
 //Admin: Ban manager/player by ID
-userRouter.post("/profile/admin-panel/:list/:id/ban", authenticateAccessToken, checkRole(UserRole.Admin), banUser);
+userRouter.post("/list-users/:id/ban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParametrs(), banUser);
 //Admin: Unban manager/player by ID
-userRouter.post("/profile/admin-panel/:list/:id/unban", authenticateAccessToken, checkRole(UserRole.Admin), unbanUser);
+userRouter.post("/list-users/:id/unban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParametrs(), unbanUser);

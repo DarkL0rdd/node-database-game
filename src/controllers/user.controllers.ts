@@ -133,7 +133,7 @@ export const updateInfoUserProfile = async (req: Request, res: Response) => {
 
 export const showInfoAllUsersByRole = async (req: Request, res: Response) => {
   try {
-    const users = await getInfoAllUsersByRole(req.params.list);
+    const users = await getInfoAllUsersByRole(String(req.query.role));
     res.json(users);
   } catch (err) {
     console.log(err);
@@ -143,8 +143,7 @@ export const showInfoAllUsersByRole = async (req: Request, res: Response) => {
 
 export const showInfoUserByRoleAndId = async (req: Request, res: Response) => {
   try {
-    const user = await getInfoOneUserByRoleAndId(req.params.list, req.params.id);
-    if (!user) return res.status(404).json({ Message: "User is not found." });
+    const user = await getInfoOneUserByRoleAndId(String(req.query.role), req.params.id);
     return res.json(user);
   } catch (err) {
     console.log(err);
@@ -154,7 +153,7 @@ export const showInfoUserByRoleAndId = async (req: Request, res: Response) => {
 
 export const banUser = async (req: Request, res: Response) => {
   try {
-    const user = await blockUserById(req.params.list, req.params.id, req.body.reason);
+    const user = await blockUserById(String(req.query.role), req.params.id, req.body.reason);
     res.status(200).json({ Message: `User with id #${req.params.id} is blocked.` });
   } catch (err) {
     console.log(err);
@@ -164,7 +163,7 @@ export const banUser = async (req: Request, res: Response) => {
 
 export const unbanUser = async (req: Request, res: Response) => {
   try {
-    const user = await unblockUserById(req.params.list, req.params.id, req.body.reason);
+    const user = await unblockUserById(String(req.query.role), req.params.id, req.body.reason);
     res.status(200).json({ Message: `User with id #${req.params.id} is unblocked.` });
   } catch (err) {
     console.log(err);
