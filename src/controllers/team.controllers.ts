@@ -14,7 +14,7 @@ export const showInfoAllTeams = async (req: Request, res: Response) => {
 export const showInfoTeamById = async (req: Request, res: Response) => {
   try {
     const team = await getInfoTeamById(req.params.id);
-    return res.json(team);
+    res.json(team);
   } catch (err) {
     console.log(err);
     res.status(err.status).json({ Message: err.message });
