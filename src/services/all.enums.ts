@@ -15,10 +15,10 @@ export const enum UserStatus {
   Blocked = "Blocked",
 }
 
-export enum PlayerRequest {
+export enum RequestType {
   BecomeManager = "Change role to Manager",
-  AddToTeam = "Add to the team",
-  ExitTeam = "Exit from team",
+  JoinToTeam = "Add to the team",
+  ExitFromTeam = "Exit from team",
   ChangeTeam = "Change team",
   UnbanProfile = "Unban profile",
 }
