@@ -17,8 +17,6 @@ export const checkRole = (...roles: string[]) => {
       });
       if (!user) throw new CustomError(404, "User is not found.");
       if (!roles.includes(user.role.role_name)) throw new CustomError(403, "You don't have permission to access this page.");
-      res.locals.userRole = user.role.role_name;
-      console.log("checkRole");
       next();
     } catch (err) {
       console.log(err);
