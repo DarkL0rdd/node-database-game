@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { CustomError } from "../services/error.service";
 import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "../services/jwt.service";
 
 export const authenticateAccessToken = async (req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +17,7 @@ export const authenticateAccessToken = async (req: Request, res: Response, next:
     const accessPayload = await verifyAccessToken(token);
     if (!accessPayload) {
       console.log("userPayload", accessPayload);
-      console.log("Middleware - userPayload is undefined");
+      console.log("MiddlewareJWT - userPayload is undefined");
       res.redirect(307, "/user/refresh");
     } else {
       req.user = accessPayload;
