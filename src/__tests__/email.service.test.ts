@@ -1,20 +1,18 @@
 import { sequelize } from "../sequelize";
-import { findUserEmail, compareUserEmail } from "../services/email.service";
-import { CustomError } from "../services/error.service";
+import { findUserEmail } from "../services/email.service";
 
-describe("findUserEmail", () => {
-  test("Should find user email and id", async () => {
+describe("Function findUserEmail:", () => {
+  test("Should find user's email and id in db.", async () => {
     const findEmail = "test2@gmail.com";
     const userInfo = await findUserEmail(findEmail);
     expect(userInfo).toEqual({ email: `${findEmail}`, id: 2 });
   });
 
-  test("Should throw error when user email not found", async () => {
+  test("Should throw error if user's email is not found in db.", async () => {
     const findEmail = "test25@gmail.com";
     let errObj = undefined;
-    let userInfo = undefined;
     try {
-      userInfo = await findUserEmail(findEmail);
+      const userInfo = await findUserEmail(findEmail);
     } catch (err) {
       errObj = {
         status: err.status,
@@ -24,8 +22,6 @@ describe("findUserEmail", () => {
     expect(errObj).toEqual({ status: 401, message: `User with email ${findEmail} is not found.` });
   });
 });
-
-describe("compareUserEmail", () => {});
 
 afterAll((done) => {
   //Closing the DB connection allows Jest to exit successfully.
