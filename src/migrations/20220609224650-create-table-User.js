@@ -19,7 +19,7 @@ module.exports = {
         allowNull: false,
       },
       team_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER || DataTypes.NULL,
         allowNull: true,
       },
       first_name: {
@@ -54,7 +54,7 @@ module.exports = {
         allowNull: true,
       },
       refresh_token: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING || DataTypes.NULL,
         allowNull: true,
       },
       createdAt: {
