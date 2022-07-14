@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findUserEmail, compareUserEmail } from "../services/email.service";
+import { findUserEmail } from "../services/email.service";
 import { hashUserPassword, compareUserPassword, generateLinkEmail, saveNewUserPassword } from "../services/password.service";
 import {
   generateAccessToken,
@@ -21,7 +21,7 @@ import jwt from "jsonwebtoken";
 
 export const registrationNewUser = async (req: Request, res: Response) => {
   try {
-    await compareUserEmail(req.body.email);
+    req.body.password = res.locals.password;
     const newUser = await createUser(req.body.first_name, req.body.second_name, req.body.email, req.body.password);
     if (newUser) res.status(200).json({ Message: "Successful registration." });
   } catch (err) {
