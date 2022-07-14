@@ -15,13 +15,15 @@ import {
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
+import { validateUserPassword } from "../middleware/password.validation";
 import { validateQueryParametrs } from "../middleware/validate.params";
+import { compareUserEmail } from "../middleware/email.validation";
 import { UserRole } from "../services/all.enums";
 
 export const userRouter: Application = router();
 
 //User
-userRouter.post("/register", registrationNewUser);
+userRouter.post("/register", compareUserEmail(), validateUserPassword(), registrationNewUser);
 userRouter.post("/login", loginUser);
 userRouter.all("/refresh", generateNewTokens);
 userRouter.post("/logout", logoutUser);
