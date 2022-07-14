@@ -103,7 +103,7 @@ export class User extends Model<User, UserAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(1000),
   })
   password: string;
 
@@ -122,7 +122,7 @@ export class User extends Model<User, UserAttributes> {
 
   @AllowNull(true)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(1000),
   })
   refresh_token?: string | null;
 

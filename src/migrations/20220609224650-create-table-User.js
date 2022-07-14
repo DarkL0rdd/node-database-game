@@ -40,7 +40,7 @@ module.exports = {
         isEmail: true,
       },
       password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1000),
         allowNull: false,
         notEmpty: true,
       },
@@ -54,7 +54,7 @@ module.exports = {
         allowNull: true,
       },
       refresh_token: {
-        type: DataTypes.STRING || DataTypes.NULL,
+        type: DataTypes.STRING(1000) || DataTypes.NULL,
         allowNull: true,
       },
       createdAt: {
