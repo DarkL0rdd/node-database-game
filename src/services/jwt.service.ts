@@ -6,31 +6,45 @@ import { CustomError } from "./error.service";
 const userSequelize = sequelize.getRepository(User);
 
 export const generateAccessToken = async (reqEmail: string, timeAccesss: string) => {
-  const accessToken = jwt.sign({ reqEmail }, `${process.env.ACCESS_SECRET_KEY}`, { expiresIn: timeAccesss });
-  if (!accessToken) throw new CustomError(500, "Error generate access token."); // throw new CustomError(500, "Server error.");
-  return accessToken;
+  try {
+    return jwt.sign({ reqEmail }, `${process.env.ACCESS_SECRET_KEY}`, { expiresIn: timeAccesss });
+  } catch (err) {
+    throw new CustomError(500, "Error generate access token."); // throw new CustomError(500, "Server error.");
+  }
 };
 
 export const generateRefreshToken = async (reqEmail: string, timeRefresh: string) => {
-  const refreshToken = jwt.sign({ reqEmail }, `${process.env.REFRESH_SECRET_KEY}`, { expiresIn: timeRefresh });
-  if (!refreshToken) throw new CustomError(500, "Error generate refresh token."); // throw new CustomError(500, "Server error.");
-  return refreshToken;
+  try {
+    return jwt.sign({ reqEmail }, `${process.env.REFRESH_SECRET_KEY}`, { expiresIn: timeRefresh });
+  } catch (err) {
+    throw new CustomError(500, "Error generate refresh token."); // throw new CustomError(500, "Server error.");
+  }
 };
 
 export const saveToken = async (reqUserId: number, refreshToken: string) => {
-  const userId = await userSequelize.findOne({ where: { id: reqUserId } });
-  if (!userId) throw new CustomError(404, "User not found.");
-  userId.refresh_token = refreshToken;
-  return userId.save();
+  try {
+    return await userSequelize.update(
+      { refresh_token: refreshToken },
+      {
+        where: { id: reqUserId },
+      }
+    );
+  } catch (err) {
+    throw new CustomError(500, "Error save token."); // throw new CustomError(500, "Server error.");
+  }
 };
 
 export const removeRefreshToken = async (refreshTokenFromDb: string) => {
-  return await userSequelize.update(
-    { refresh_token: undefined },
-    {
-      where: { refresh_token: refreshTokenFromDb },
-    }
-  );
+  try {
+    return await userSequelize.update(
+      { refresh_token: null },
+      {
+        where: { refresh_token: refreshTokenFromDb },
+      }
+    );
+  } catch (err) {
+    throw new CustomError(500, "Error remove refresh token."); // throw new CustomError(500, "Server error.");
+  }
 };
 
 export const verifyRefreshToken = async (refreshToken: string) => {
@@ -39,6 +53,7 @@ export const verifyRefreshToken = async (refreshToken: string) => {
     return jwt.verify(refreshToken, `${process.env.REFRESH_SECRET_KEY}`);
   } catch (err) {
     console.log(err);
+    //throw new CustomError(403, "Error verify refresh token.");
   }
 };
 
@@ -48,5 +63,6 @@ export const verifyAccessToken = async (accessToken: string) => {
     return jwt.verify(accessToken, `${process.env.ACCESS_SECRET_KEY}`);
   } catch (err) {
     console.log(err);
+    //throw new CustomError(403, "Error verify access token.");
   }
 };
