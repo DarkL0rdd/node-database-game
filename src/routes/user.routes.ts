@@ -13,7 +13,7 @@ import {
   showInfoAllUsersByRole,
   showInfoUserByRoleAndId,
 } from "../controllers/user.controllers";
-import { authenticateAccessToken } from "../middleware/authorization.JWT";
+import { authenticateAccessToken, authenticateRefreshToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
 import { validateUserPassword } from "../middleware/password.validation";
 import { validateQueryParametrs } from "../middleware/validate.params";
@@ -25,7 +25,7 @@ export const userRouter: Application = router();
 //User
 userRouter.post("/register", compareUserEmail(), validateUserPassword(), registrationNewUser);
 userRouter.post("/login", loginUser);
-userRouter.all("/refresh", generateNewTokens);
+userRouter.all("/refresh", authenticateRefreshToken, generateNewTokens);
 userRouter.post("/logout", logoutUser);
 userRouter.post("/forgot-password", forgotPassword);
 userRouter.post("/reset-password/:link", resetPassword);
