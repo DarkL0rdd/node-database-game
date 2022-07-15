@@ -22,29 +22,25 @@ export const generateRefreshToken = async (reqEmail: string, timeRefresh: string
 };
 
 export const saveRefreshTokenInDb = async (reqUserId: number, refreshToken: string) => {
-  try {
-    return await userSequelize.update(
-      { refresh_token: refreshToken },
-      {
-        where: { id: reqUserId },
-      }
-    );
-  } catch (err) {
-    throw new CustomError(500, "Error save token."); // throw new CustomError(500, "Server error.");
-  }
+  const affectedRow = await userSequelize.update(
+    { refresh_token: refreshToken },
+    {
+      where: { id: reqUserId },
+    }
+  );
+  if (affectedRow[0] === 1) return affectedRow;
+  throw new CustomError(500, "Error save refresh token."); // throw new CustomError(500, "Server error.");
 };
 
 export const removeRefreshToken = async (refreshTokenFromDb: string) => {
-  try {
-    return await userSequelize.update(
-      { refresh_token: null },
-      {
-        where: { refresh_token: refreshTokenFromDb },
-      }
-    );
-  } catch (err) {
-    throw new CustomError(500, "Error remove refresh token."); // throw new CustomError(500, "Server error.");
-  }
+  const affectedRow = await userSequelize.update(
+    { refresh_token: null },
+    {
+      where: { refresh_token: refreshTokenFromDb },
+    }
+  );
+  if (affectedRow[0] === 1) return affectedRow;
+  throw new CustomError(500, "Error remove refresh token."); // throw new CustomError(500, "Server error.");
 };
 
 export const verifyRefreshToken = async (refreshToken: string) => {
