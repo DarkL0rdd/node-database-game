@@ -21,7 +21,7 @@ export const generateRefreshToken = async (reqEmail: string, timeRefresh: string
   }
 };
 
-export const saveToken = async (reqUserId: number, refreshToken: string) => {
+export const saveRefreshTokenInDb = async (reqUserId: number, refreshToken: string) => {
   try {
     return await userSequelize.update(
       { refresh_token: refreshToken },
@@ -53,7 +53,7 @@ export const verifyRefreshToken = async (refreshToken: string) => {
     return jwt.verify(refreshToken, `${process.env.REFRESH_SECRET_KEY}`);
   } catch (err) {
     console.log(err);
-    //throw new CustomError(403, "Error verify refresh token.");
+    throw new CustomError(403, "Error verify refresh token.");
   }
 };
 
@@ -63,6 +63,5 @@ export const verifyAccessToken = async (accessToken: string) => {
     return jwt.verify(accessToken, `${process.env.ACCESS_SECRET_KEY}`);
   } catch (err) {
     console.log(err);
-    //throw new CustomError(403, "Error verify access token.");
   }
 };
