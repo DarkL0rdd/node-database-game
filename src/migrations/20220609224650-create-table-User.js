@@ -23,17 +23,17 @@ module.exports = {
         allowNull: true,
       },
       first_name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         notEmpty: true,
       },
       second_name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(50),
         allowNull: false,
         notEmpty: true,
       },
       email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(254),
         allowNull: false,
         unique: true,
         notEmpty: true,
@@ -45,16 +45,16 @@ module.exports = {
         notEmpty: true,
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: false,
         notEmpty: true,
       },
       reason: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(254),
         allowNull: true,
       },
       refresh_token: {
-        type: DataTypes.STRING(1000) || DataTypes.NULL,
+        type: DataTypes.STRING(2000) || DataTypes.NULL,
         allowNull: true,
       },
       createdAt: {

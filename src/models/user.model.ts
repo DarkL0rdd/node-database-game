@@ -80,14 +80,14 @@ export class User extends Model<User, UserAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(50),
   })
   first_name: string;
 
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(50),
   })
   second_name: string;
 
@@ -96,7 +96,7 @@ export class User extends Model<User, UserAttributes> {
   @NotEmpty
   @IsEmail
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(254),
   })
   email: string;
 
@@ -110,19 +110,19 @@ export class User extends Model<User, UserAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
   })
   status: string;
 
   @AllowNull(true)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(254),
   })
   reason?: string;
 
   @AllowNull(true)
   @Column({
-    type: DataType.STRING(1000),
+    type: DataType.STRING(2000),
   })
   refresh_token?: string | null;
 

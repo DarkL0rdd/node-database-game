@@ -41,7 +41,7 @@ export class Team extends Model<Team, TeamAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
   })
   team_name: string;
 
