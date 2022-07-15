@@ -8,26 +8,19 @@ const userSequelize = sequelize.getRepository(User);
 
 export const hashUserPassword = async (reqPassword: string, salRounds: number) => {
   if (reqPassword) {
-    return await bcrypt.hashSync(reqPassword, salRounds);
+    return bcrypt.hashSync(reqPassword, salRounds);
   }
-  throw new CustomError(404, "Password is empty.");
-};
-
-const findUserPassword = async (reqEmail: string) => {
-  const emailFind = await userSequelize.findOne({
-    where: { email: reqEmail },
-  });
-  if (!emailFind?.email) {
-    throw new CustomError(401, `User with email ${reqEmail} is not found.`);
-  } else {
-    return emailFind.password;
-  }
+  throw new CustomError(500, "Error password.");
 };
 
 export const compareUserPassword = async (reqEmail: string, reqPassword: string) => {
-  const userPasswordFromDb = await findUserPassword(reqEmail);
-  let hashCompare: boolean = await bcrypt.compareSync(reqPassword, userPasswordFromDb);
-  if (!hashCompare) throw new CustomError(403, "Wrong password.");
+  const passwordFind = await userSequelize.findOne({
+    where: { email: reqEmail },
+    attributes: ["password"],
+  });
+  if (!passwordFind) throw new CustomError(401, "Email is incorrect.");
+  const hashCompare: boolean = bcrypt.compareSync(reqPassword, passwordFind.password);
+  if (!hashCompare) throw new CustomError(403, "Password is incorrect.");
 };
 
 export const generateLinkEmail = async (userEmail: string) => {
@@ -36,16 +29,17 @@ export const generateLinkEmail = async (userEmail: string) => {
   });
   if (!token) throw new CustomError(500, "Error generate reset-link email.");
   const resetLink = `http://${process.env.DB_HOST}:${process.env.SERVER_PORT}/user/reset-password/${token}`;
+  console.log("resetLink: ", resetLink);
   return resetLink;
 };
 
 export const saveNewUserPassword = async (newPassword: string, reqEmail: string) => {
-  const savePass = await userSequelize.update(
+  const affectedRow = await userSequelize.update(
     { password: newPassword },
     {
       where: { email: reqEmail },
     }
   );
-  if (!savePass) throw new CustomError(500, "Error save new password.");
-  return savePass;
+  if (affectedRow[0] === 1) return affectedRow;
+  throw new CustomError(500, "Error save new password.");
 };
