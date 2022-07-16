@@ -1,22 +1,18 @@
 import { sequelize } from "../sequelize";
 import { User } from "../models/user.model";
 import { Role } from "../models/role.model";
-import { UserRequest } from "../models/userrequest.model";
-import { Team } from "../models/team.model";
 import { hashUserPassword } from "./password.service";
 import { CustomError } from "./error.service";
 import { HashRound, UserRole, UserStatus } from "./all.enums";
 
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
-const teamSequelize = sequelize.getRepository(Team);
-const requestSequelize = sequelize.getRepository(UserRequest);
 
 export const createUser = async (reqFirstName: string, reqSecondName: string, reqEmail: string, reqPassword: string) => {
   if (!reqFirstName || !reqSecondName || !reqEmail || !reqPassword) throw new CustomError(400, "Required fields are empty.");
   const rolePlayer = await roleSequelize.findOne({ where: { role_name: UserRole.Player } });
   if (!rolePlayer) throw new CustomError(500, "User registration error.");
-  const hashPassword = await hashUserPassword(reqPassword, HashRound.EightRound); //?
+  const hashPassword = await hashUserPassword(reqPassword, HashRound.EightRound);
   return await userSequelize.create({
     first_name: reqFirstName,
     role_id: rolePlayer.id,
@@ -58,7 +54,7 @@ export const changeInfoUserProfile = async (
   } else {
     hashPassword = await hashUserPassword(newPassword, 8);
   }
-  return await userSequelize.update(
+  const affectedRow = await userSequelize.update(
     {
       first_name: newFirstName,
       second_name: newSecondName,
@@ -67,48 +63,40 @@ export const changeInfoUserProfile = async (
     },
     { where: { email: userEmail } }
   );
+  if (affectedRow[0] === 1) return affectedRow;
+  throw new CustomError(500, "Error change user profile.");
 };
 
-const findAllUsersByRole = async (roleName: string) => {
+export const getInfoAllUsersByRole = async (queryRole: string) => {
+  const roleName = queryRole.charAt(0).toUpperCase() + queryRole.slice(1);
   const users = await userSequelize.findAll({
     //attributes: ["first_name", "second_name", "email"],
     include: [{ model: roleSequelize, /*attributes: ["role_name"],*/ where: { role_name: roleName } }],
     attributes: { exclude: ["password", "refresh_token"] },
   });
-  if (!users) throw new CustomError(500, "Users not found.");
+  if (users.length === 0 || !users) throw new CustomError(500, "Users not found.");
   return users;
 };
 
-export const getInfoAllUsersByRole = async (queryRole: string) => {
-  const users = await findAllUsersByRole(queryRole.charAt(0).toUpperCase() + queryRole.slice(1));
-  if (!users) throw new CustomError(400, "Wrong type list.");
-  return users;
-};
-
-const findOneUserByRoleAndId = async (roleName: string, userId: string) => {
+export const getInfoOneUserByRoleAndId = async (queryRole: string, userId: string) => {
+  const roleName = queryRole.charAt(0).toUpperCase() + queryRole.slice(1);
   const user = await userSequelize.findOne({
     where: { id: userId },
     include: [{ model: roleSequelize, where: { role_name: roleName } }],
     attributes: { exclude: ["password", "refresh_token"] },
   });
-  if (!user) throw new CustomError(404, "User not found.");
+  if (!user) throw new CustomError(500, "User not found.");
   return user;
 };
 
-export const getInfoOneUserByRoleAndId = async (queryRole: string, userId: string) => {
-  const user = await findOneUserByRoleAndId(queryRole.charAt(0).toUpperCase() + queryRole.slice(1), userId);
-  if (!user) throw new CustomError(400, "Wrong type list.");
-  return user;
+export const blockUserById = async (userId: string, msgReason?: string) => {
+  const affectedRow = await userSequelize.update({ status: UserStatus.Blocked, reason: msgReason }, { where: { id: userId } });
+  if (affectedRow[0] === 1) return affectedRow;
+  throw new CustomError(500, "Error block user.");
 };
 
-export const blockUserById = async (queryRole: string, userId: string, msgReason?: string) => {
-  const user = await getInfoOneUserByRoleAndId(queryRole, userId);
-  if (!user) throw new CustomError(404, `User with id #${userId} not found.`);
-  return await userSequelize.update({ status: UserStatus.Blocked, reason: msgReason }, { where: { id: userId } });
-};
-
-export const unblockUserById = async (queryRole: string, userId: string, msgReason?: string) => {
-  const user = await getInfoOneUserByRoleAndId(queryRole, userId);
-  if (!user) throw new CustomError(404, `User with id #${userId} not found.`);
-  return await userSequelize.update({ status: UserStatus.Active, reason: msgReason }, { where: { id: userId } });
+export const unblockUserById = async (userId: string, msgReason?: string) => {
+  const affectedRow = await userSequelize.update({ status: UserStatus.Active, reason: msgReason }, { where: { id: userId } });
+  if (affectedRow[0] === 1) return affectedRow;
+  throw new CustomError(500, "Error unblock user.");
 };
