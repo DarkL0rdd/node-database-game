@@ -4,37 +4,29 @@ import { hashUserPassword, compareUserPassword, generateLinkEmail, saveNewUserPa
 import {
   generateAccessToken,
   generateRefreshToken,
+  removeRefreshToken,
   saveToken,
   verifyAccessToken,
-  verifyRefreshToken,
 } from "../services/jwt.service";
 import {
-  changeInfoUser,
   createUser,
-  getAllUsers,
-  getInfoManagers,
-  getInfoManagerById,
-  getInfoPlayerById,
-  getInfoPlayers,
-  getInfoUser,
-  logout,
+  getInfoUserProfile,
+  changeInfoUserProfile,
+  getInfoAllUsersByRole,
+  getInfoOneUserByRoleAndId,
+  blockUserById,
+  unblockUserById,
 } from "../services/user.service";
 import jwt from "jsonwebtoken";
 
 export const registrationNewUser = async (req: Request, res: Response) => {
   try {
-    const userEmail = await compareUserEmail(req.body.email);
-    if (userEmail) return res.status(500).send(`User with email ${req.body.email} already exist.`);
-    const hashPassword = await hashUserPassword(req.body.password, 8);
-    if (hashPassword) {
-      const newUser = await createUser(req.body.first_name, req.body.second_name, req.body.email, hashPassword);
-      if (newUser) return res.status(200).send("Successful registration.");
-    } else {
-      return res.status(500).send();
-    }
+    await compareUserEmail(req.body.email);
+    const newUser = await createUser(req.body.first_name, req.body.second_name, req.body.email, req.body.password);
+    if (newUser) res.status(200).json({ Message: "Successful registration." });
   } catch (err) {
     console.log(err);
-    res.status(500).send();
+    res.status(err.status).json({ Message: err.message });
   }
 };
 
@@ -42,10 +34,8 @@ export const loginUser = async (req: Request, res: Response) => {
   //автентифікація + авторизація
   try {
     const userEmail = await findUserEmail(req.body.email);
-    if (!userEmail) return res.status(400).send(`User with email ${req.body.email} is not found.`);
-    const hashCompare = await compareUserPassword(req.body.email, req.body.password);
-    if (!hashCompare) return res.status(400).send(`Wrong password.`);
-    const accessToken = await generateAccessToken(req.body.email, "1s"); //!! час життя токену
+    await compareUserPassword(req.body.email, req.body.password);
+    const accessToken = await generateAccessToken(req.body.email, "1s"); //! час життя токену
     const refreshToken = await generateRefreshToken(req.body.email, "30d");
     if (accessToken && refreshToken) {
       await saveToken(userEmail.id, refreshToken);
@@ -53,46 +43,35 @@ export const loginUser = async (req: Request, res: Response) => {
         maxAge: 24 * 60 * 60 * 30,
         httpOnly: true,
       });
-      res.status(200).send({ Message: "Successful login.", "Access Token": accessToken, "Refresh Token": refreshToken });
-    } else {
-      res.status(500).send();
+      res.status(200).json({ Message: "Successful login.", "Access Token": accessToken, "Refresh Token": refreshToken });
     }
   } catch (err) {
     console.log(err);
-    res.status(500).send();
+    res.status(err.status).json({ Message: err.message });
   }
 };
 
 export const logoutUser = async (req: Request, res: Response) => {
   try {
-    //!? що робити, якщо немає кукі
-    if (!req.headers.authorization || !req.cookies["refresh-token"]) return res.send("You are already logged out.");
-    await logout(req.cookies["refresh-token"]);
+    if (!req.headers.authorization && !req.cookies["refresh-token"])
+      return res.status(200).send({ Message: "You are already logged out." });
+    await removeRefreshToken(req.cookies["refresh-token"]);
     res.clearCookie("refresh-token");
-    req.headers.authorization = "";
-    res.send("You are logged out.");
+    res.status(200).json({ Message: "You are logged out." });
   } catch (err) {
     console.log(err);
-  }
-};
-
-export const getUsers = async (req: Request, res: Response) => {
-  try {
-    const allUsers = await getAllUsers();
-    return res.json(allUsers);
-  } catch (err) {
-    console.log(err);
+    res.status(err.status).json({ Message: err.message });
   }
 };
 
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const userEmail = await findUserEmail(req.body.email);
-    if (!userEmail) return res.status(400).send(`User with email ${req.body.email} is not found.`);
     const resetPasswordLink = await generateLinkEmail(userEmail.email);
-    res.send({ Message: "Link has been sent to email.", "Link from email": resetPasswordLink });
+    res.status(200).json({ Message: "Link has been sent to email.", "Link from email": resetPasswordLink });
   } catch (err) {
     console.log(err);
+    res.status(err.status).json({ Message: err.message });
   }
 };
 
@@ -101,16 +80,13 @@ export const resetPassword = async (req: Request, res: Response) => {
     const userPayloadFromLink = await verifyAccessToken(req.params.link);
     const userEmailFromLink = JSON.parse(JSON.stringify(userPayloadFromLink));
     const userEmail = await findUserEmail(userEmailFromLink.userEmail);
-    if (!userEmail) return res.status(400).send(`User with email ${userEmailFromLink.userEmail} is not found.`);
     const hashPassword = await hashUserPassword(req.body.password, 8);
-    if (hashPassword) {
-      const newUserPassword = await saveNewUserPassword(hashPassword, userEmail.email);
-      if (newUserPassword) return res.status(200).send("Successful reset password.");
-    } else {
-      return res.status(500).send("Something went wrong.");
-    }
+    const newUserPassword = await saveNewUserPassword(hashPassword, userEmail.email);
+    console.log(newUserPassword);
+    if (newUserPassword) return res.status(200).json({ Message: "Successful reset password." });
   } catch (err) {
     console.log(err);
+    res.status(err.status).json({ Message: err.message });
   }
 };
 
@@ -126,64 +102,71 @@ export const generateNewTokens = async (req: Request, res: Response) => {
       maxAge: 24 * 60 * 60 * 30,
       httpOnly: true,
     });
-    res.status(200).send({ "New Access Token": accessToken, "New Refresh Token": refreshToken });
+    res.status(200).json({ "New Access Token": accessToken, "New Refresh Token": refreshToken }); //!add redirect to previous page
   } catch (err) {
     console.log(err);
+    res.status(err.status).json({ Message: err.message });
   }
 };
 
-export const showInfoUser = async (req: Request, res: Response) => {
+export const showInfoUserProfile = async (req: Request, res: Response) => {
   try {
-    const oneUser = await getInfoUser(req.user.reqEmail);
-    return res.json(oneUser);
-  } catch (error) {
-    console.log(error);
+    const oneUser = await getInfoUserProfile(req.user.reqEmail);
+    res.json(oneUser);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Message: err.message });
   }
 };
 
-export const updateInfoUser = async (req: Request, res: Response) => {
+export const updateInfoUserProfile = async (req: Request, res: Response) => {
   try {
-    if (await changeInfoUser(req.user.reqEmail, req.body.first_name, req.body.second_name, req.body.email, req.body.password)) {
-      return res.status(200).send("Successful update info user.");
-    }
-    return res.status(500).send("Something went wrong.");
-  } catch (error) {
-    console.log(error);
+    if (
+      await changeInfoUserProfile(req.user.reqEmail, req.body.first_name, req.body.second_name, req.body.email, req.body.password)
+    )
+      res.status(200).json({ Message: "Successful update info user." });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Message: err.message });
   }
 };
 
-export const showInfoManagers = async (req: Request, res: Response) => {
+export const showInfoAllUsersByRole = async (req: Request, res: Response) => {
   try {
-    const manyManagers = await getInfoManagers();
-    return res.json(manyManagers);
-  } catch (error) {
-    console.log(error);
+    const users = await getInfoAllUsersByRole(String(req.query.role));
+    res.json(users);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Message: err.message });
   }
 };
 
-export const showInfoByIdManager = async (req: Request, res: Response) => {
+export const showInfoUserByRoleAndId = async (req: Request, res: Response) => {
   try {
-    const oneManager = await getInfoManagerById(req.params.id);
-    return res.json(oneManager);
-  } catch (error) {
-    console.log(error);
+    const user = await getInfoOneUserByRoleAndId(String(req.query.role), req.params.id);
+    return res.json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Message: err.message });
   }
 };
 
-export const showInfoPlayers = async (req: Request, res: Response) => {
+export const banUser = async (req: Request, res: Response) => {
   try {
-    const manyPlayers = await getInfoPlayers();
-    return res.json(manyPlayers);
-  } catch (error) {
-    console.log(error);
+    const user = await blockUserById(String(req.query.role), req.params.id, req.body.reason);
+    res.status(200).json({ Message: `User with id #${req.params.id} is blocked.` });
+  } catch (err) {
+    console.log(err);
+    res.status(401).json({ Message: err.message });
   }
 };
 
-export const showInfoByIdPlayer = async (req: Request, res: Response) => {
+export const unbanUser = async (req: Request, res: Response) => {
   try {
-    const onePlayer = await getInfoPlayerById(req.params.id);
-    return res.json(onePlayer);
-  } catch (error) {
-    console.log(error);
+    const user = await unblockUserById(String(req.query.role), req.params.id, req.body.reason);
+    res.status(200).json({ Message: `User with id #${req.params.id} is unblocked.` });
+  } catch (err) {
+    console.log(err);
+    res.status(401).json({ Message: err.message });
   }
 };

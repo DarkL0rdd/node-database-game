@@ -2,7 +2,7 @@
 const { DataTypes } = require("sequelize");
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable("Roles", {
+    return queryInterface.createTable("Teams", {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -12,8 +12,8 @@ module.exports = {
         isInt: true,
         notEmpty: true,
       },
-      role_name: {
-        type: DataTypes.STRING(20),
+      team_name: {
+        type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         notEmpty: true,
@@ -36,6 +36,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.dropTable("Roles");
+    return queryInterface.dropTable("Teams");
   },
 };

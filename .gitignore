@@ -1,7 +1,8 @@
 /node_modules
 /dist
 .env
+index.test.html
 forgot_password.html
 reset_password.html
 login.html
-register.html
+registration.html

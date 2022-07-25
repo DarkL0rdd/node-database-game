@@ -2,46 +2,37 @@
 const { DataTypes } = require("sequelize");
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable("Users", {
+    return queryInterface.createTable("Requests", {
       id: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
         autoIncrement: true,
+        primaryKey: true,
         unique: true,
+        allowNull: false,
+        isInt: true,
+        notEmpty: true,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         notEmpty: true,
         isInt: true,
       },
-      role_id: {
+      request_type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      team_id: {
         type: DataTypes.INTEGER,
-        notEmpty: true,
-        allowNull: false,
-      },
-      first_name: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        notEmpty: true,
-      },
-      second_name: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        notEmpty: true,
-      },
-      email: {
-        type: DataTypes.STRING(50),
-        allowNull: false,
-        unique: true,
-        notEmpty: true,
-        isEmail: true,
-      },
-      password: {
-        type: DataTypes.STRING(150),
-        allowNull: false,
-        notEmpty: true,
-      },
-      refresh_token: {
-        type: DataTypes.STRING(500),
         allowNull: true,
+      },
+      description: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      status: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       createdAt: {
         underscored: true,
@@ -61,6 +52,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    return queryInterface.dropTable("Users");
+    return queryInterface.dropTable("Requests");
   },
 };

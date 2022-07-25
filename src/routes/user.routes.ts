@@ -5,42 +5,62 @@ import {
   logoutUser,
   forgotPassword,
   resetPassword,
-  getUsers,
   generateNewTokens,
-  showInfoUser,
-  updateInfoUser,
-  showInfoManagers,
-  showInfoByIdManager,
-  showInfoPlayers,
-  showInfoByIdPlayer,
+  showInfoUserProfile,
+  updateInfoUserProfile,
+  banUser,
+  unbanUser,
+  showInfoAllUsersByRole,
+  showInfoUserByRoleAndId,
 } from "../controllers/user.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
+import { checkRole } from "../middleware/check.roles";
+import { validateQueryParametrs } from "../middleware/validate.params";
+import { UserRole } from "../services/all.enums";
 
 export const userRouter: Application = router();
 
-//user
+//User
 userRouter.post("/register", registrationNewUser);
 userRouter.post("/login", loginUser);
-userRouter.all("/refresh", generateNewTokens); //? куди далі перейти ?
+userRouter.all("/refresh", generateNewTokens);
 userRouter.post("/logout", logoutUser);
 userRouter.post("/forgot-password", forgotPassword);
-//userRouter.get("/reset-password/:link", resetPassword);
 userRouter.post("/reset-password/:link", resetPassword);
+userRouter.get(
+  "/profile",
+  authenticateAccessToken,
+  checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
+  showInfoUserProfile
+);
+userRouter.post(
+  "/profile/change-info",
+  authenticateAccessToken,
+  checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
+  updateInfoUserProfile
+);
 
-userRouter.get("/profile", authenticateAccessToken, showInfoUser);
-userRouter.post("/profile/change-info", authenticateAccessToken, updateInfoUser);
+//List of query params: admin, manager, player
+// /?role=admin
 
-//admin
-userRouter.get("/profile/admin-panel/list-managers", authenticateAccessToken, showInfoManagers);
-userRouter.get("/profile/admin-panel/list-managers/:id", authenticateAccessToken, showInfoByIdManager);
-userRouter.get("/profile/admin-panel/list-players", authenticateAccessToken, showInfoPlayers);
-userRouter.get("/profile/admin-panel/list-players/:id", authenticateAccessToken, showInfoByIdPlayer);
+//All: Show list of admins/managers/players
+userRouter.get(
+  "/list-users",
+  authenticateAccessToken,
+  checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
+  validateQueryParametrs(),
+  showInfoAllUsersByRole
+);
+//All: Show one admin/manager/player by ID
+userRouter.get(
+  "/list-users/:id",
+  authenticateAccessToken,
+  checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
+  validateQueryParametrs(),
+  showInfoUserByRoleAndId
+);
 
-//manager
-userRouter.get("/profile/manager-panel/list-players", authenticateAccessToken, showInfoPlayers);
-userRouter.get("/profile/manager-panel/list-players/:id", authenticateAccessToken, showInfoByIdPlayer);
-
-//player
-
-//тестовий маршрут
-userRouter.get("/users", authenticateAccessToken, getUsers);
+//Admin: Ban manager/player by ID
+userRouter.post("/list-users/:id/ban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParametrs(), banUser);
+//Admin: Unban manager/player by ID
+userRouter.post("/list-users/:id/unban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParametrs(), unbanUser);

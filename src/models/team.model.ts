@@ -15,17 +15,17 @@ import {
 } from "sequelize-typescript";
 import { User } from "../models/user.model";
 
-export interface RoleAttributes {
+export interface TeamAttributes {
   id?: number;
-  role: string;
+  team_name: string;
 }
 
 @Table({
-  tableName: "Roles",
+  tableName: "Teams",
   timestamps: true,
   underscored: true,
 })
-export class Role extends Model<Role, RoleAttributes> {
+export class Team extends Model<Team, TeamAttributes> {
   @PrimaryKey
   @AutoIncrement
   @Unique(true)
@@ -43,9 +43,9 @@ export class Role extends Model<Role, RoleAttributes> {
   @Column({
     type: DataType.STRING,
   })
-  role_name: string;
+  team_name: string;
 
-  @HasMany(() => User, "role_id")
+  @HasMany(() => User, "team_id")
   users: User[];
 
   @CreatedAt

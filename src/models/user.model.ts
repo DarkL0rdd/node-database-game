@@ -14,18 +14,25 @@ import {
   IsInt,
   ForeignKey,
   BelongsTo,
+  HasMany,
 } from "sequelize-typescript";
 import { Role } from "../models/role.model";
+import { Team } from "./team.model";
+import { UserRequest } from "./userrequest.model";
 
 export interface UserAttributes {
   id?: number;
   role_id: number;
   role?: Role;
+  team_id?: number;
+  team?: Team;
   first_name: string;
   second_name: string;
   email: string;
   password: string;
-  refresh_token: string;
+  status: string;
+  reason?: string;
+  refresh_token?: string;
 }
 
 @Table({
@@ -57,17 +64,30 @@ export class User extends Model<User, UserAttributes> {
   @BelongsTo(() => Role, "role_id")
   role: Role;
 
+  @HasMany(() => UserRequest, "user_id")
+  user_requests: UserRequest[];
+
+  @AllowNull(true)
+  @ForeignKey(() => Team)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  team_id?: number;
+
+  @BelongsTo(() => Team, "team_id")
+  team: Team;
+
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.STRING,
   })
   first_name: string;
 
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.STRING,
   })
   second_name: string;
 
@@ -76,22 +96,35 @@ export class User extends Model<User, UserAttributes> {
   @NotEmpty
   @IsEmail
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.STRING,
   })
   email: string;
 
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING(500),
+    type: DataType.STRING,
   })
   password: string;
 
+  @AllowNull(false)
+  @NotEmpty
+  @Column({
+    type: DataType.STRING,
+  })
+  status: string;
+
   @AllowNull(true)
   @Column({
-    type: DataType.STRING(500),
+    type: DataType.STRING,
   })
-  refresh_token: string;
+  reason?: string;
+
+  @AllowNull(true)
+  @Column({
+    type: DataType.STRING,
+  })
+  refresh_token?: string;
 
   @CreatedAt
   createdAt: Date;
