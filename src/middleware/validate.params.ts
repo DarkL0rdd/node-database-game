@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from "express";
 import { UserRole } from "../services/all.enums";
 import { CustomError } from "../services/error.service";
 
-export const validateQueryParametrs = () => {
+/**
+ * Validates query params. Checks if this role type is in the enum.
+ * @returns
+ */
+export const validateQueryParameters = () => {
   const funct = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const queryRole: UserRole = req.query.role as UserRole;
