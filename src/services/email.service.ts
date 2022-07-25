@@ -4,6 +4,12 @@ import { CustomError } from "./error.service";
 
 const userSequelize = sequelize.getRepository(User);
 
+/**
+ * Finds user's email in the database.
+ * @param reqEmail User's email.
+ * @returns Promise object with `email` and `id`.
+ * @throws `CustomError` if `reqEmail` not found in database.
+ */
 export const findUserEmail = async (reqEmail: string) => {
   const emailFind = await userSequelize.findOne({
     where: { email: reqEmail },
