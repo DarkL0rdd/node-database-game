@@ -65,7 +65,7 @@ export const cancelRequest = async (req: Request, res: Response, next: NextFunct
 
 export const answerToRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await answerRequest(req.params.id, req.body.answer, req.body.team_name);
+    await answerRequest(req.params.id, req.body.answer, req.body.team_name, req.body.user_id);
     return res.status(200).json({ Message: "Successful answer to request." });
   } catch (err) {
     next(err);
