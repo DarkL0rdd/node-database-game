@@ -15,16 +15,18 @@ import {
 } from "../controllers/user.controllers";
 import { authenticateAccessToken, authenticateRefreshToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
-import { validateUserPassword } from "../middleware/password.validation";
-import { validateQueryParametrs } from "../middleware/validate.params";
-import { compareUserEmail } from "../middleware/email.validation";
+import { validateQueryParameters } from "../middleware/validate.params";
+import { validateRequestSchema } from "../middleware/validate.request.schema";
+import { changeUserProfileSchema } from "../schema/change.user.profile.schema";
+import { loginSchema } from "../schema/login.schema";
+import { registrationSchema } from "../schema/registration.schema";
 import { UserRole } from "../services/all.enums";
 
 export const userRouter: Application = router();
 
 //User
-userRouter.post("/register", compareUserEmail(), validateUserPassword(), registrationNewUser);
-userRouter.post("/login", loginUser);
+userRouter.post("/register", registrationSchema, validateRequestSchema, registrationNewUser);
+userRouter.post("/login", loginSchema, validateRequestSchema, loginUser);
 userRouter.all("/refresh", authenticateRefreshToken, generateNewTokens);
 userRouter.post("/logout", logoutUser);
 userRouter.post("/forgot-password", forgotPassword);
@@ -50,7 +52,7 @@ userRouter.get(
   "/list-users",
   authenticateAccessToken,
   checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
-  validateQueryParametrs(),
+  validateQueryParameters(),
   showInfoAllUsersByRole
 );
 //All: Show one admin/manager/player by ID
@@ -58,11 +60,11 @@ userRouter.get(
   "/list-users/:id",
   authenticateAccessToken,
   checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
-  validateQueryParametrs(),
+  validateQueryParameters(),
   showInfoUserByRoleAndId
 );
 
 //Admin: Ban manager/player by ID
-userRouter.post("/list-users/:id/ban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParametrs(), banUser);
+userRouter.post("/list-users/:id/ban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParameters(), banUser);
 //Admin: Unban manager/player by ID
-userRouter.post("/list-users/:id/unban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParametrs(), unbanUser);
+userRouter.post("/list-users/:id/unban", authenticateAccessToken, checkRole(UserRole.Admin), validateQueryParameters(), unbanUser);
