@@ -8,6 +8,15 @@ import { HashRound, UserRole, UserStatus } from "./all.enums";
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
 
+/**
+ * Create new user in the database.
+ * @param reqFirstName User's first name.
+ * @param reqSecondName User's second name.
+ * @param reqEmail User's email.
+ * @param reqPassword User's password.
+ * @returns Promise with new `User`.
+ * @throws `CustomError` if `rolePlayer` not found in database or required fields are empty.
+ */
 export const createUser = async (reqFirstName: string, reqSecondName: string, reqEmail: string, reqPassword: string) => {
   if (!reqFirstName || !reqSecondName || !reqEmail || !reqPassword) throw new CustomError(400, "Required fields are empty.");
   const rolePlayer = await roleSequelize.findOne({ where: { role_name: UserRole.Player } });
@@ -23,6 +32,12 @@ export const createUser = async (reqFirstName: string, reqSecondName: string, re
   });
 };
 
+/**
+ * Find user's personal data in the database.
+ * @param userEmail User's email.
+ * @returns Promise object with user's data.
+ * @throws `CustomError` if user not found in the database.
+ */
 export const getInfoUserProfile = async (userEmail: string) => {
   const userInfo = await userSequelize.findOne({
     where: { email: userEmail },
@@ -33,6 +48,16 @@ export const getInfoUserProfile = async (userEmail: string) => {
   return userInfo;
 };
 
+//!
+/**
+ * Updates user's personal data in the database.
+ * @param userEmail User's email.
+ * @param newFirstName User's new first name.
+ * @param newSecondName User's new second name.
+ * @param newUserEmail User's new email.
+ * @param newPassword User's new password.
+ * @returns Promise an array of one element. The first element is the number of affected rows.
+ */
 export const changeInfoUserProfile = async (
   userEmail: string,
   newFirstName: string,
@@ -67,6 +92,12 @@ export const changeInfoUserProfile = async (
   throw new CustomError(500, "Error change user profile.");
 };
 
+/**
+ * Find users' personal data in the database by role.
+ * @param queryRole User's role.
+ * @returns Promise an array of object with users' data.
+ * @throws `CustomError` if users not found in the database(`users.length` is equal to zero(`0`)).
+ */
 export const getInfoAllUsersByRole = async (queryRole: string) => {
   const roleName = queryRole.charAt(0).toUpperCase() + queryRole.slice(1);
   const users = await userSequelize.findAll({
@@ -78,6 +109,13 @@ export const getInfoAllUsersByRole = async (queryRole: string) => {
   return users;
 };
 
+/**
+ * Find user's personal data in the database by role and id.
+ * @param queryRole User's role.
+ * @param userId User's id.
+ * @returns Promise object with user's data.
+ * @throws `CustomError` if user not found in the database.
+ */
 export const getInfoOneUserByRoleAndId = async (queryRole: string, userId: string) => {
   const roleName = queryRole.charAt(0).toUpperCase() + queryRole.slice(1);
   const user = await userSequelize.findOne({
@@ -89,12 +127,26 @@ export const getInfoOneUserByRoleAndId = async (queryRole: string, userId: strin
   return user;
 };
 
+/**
+ * Updates user's status to `Blocked` in the database.
+ * @param userId User's id.
+ * @param msgReason Reason for blocking user.
+ * @returns Promise an array of one element. The first element is the number of affected rows.
+ * @throws `CustomError` if `userId` not found in the database.
+ */
 export const blockUserById = async (userId: string, msgReason?: string) => {
   const affectedRow = await userSequelize.update({ status: UserStatus.Blocked, reason: msgReason }, { where: { id: userId } });
   if (affectedRow[0] === 1) return affectedRow;
   throw new CustomError(500, "Error block user.");
 };
 
+/**
+ * Updates user's status to `Active` in the database.
+ * @param userId User's id.
+ * @param msgReason Reason for unblocking user.
+ * @returns Promise an array of one element. The first element is the number of affected rows.
+ * @throws `CustomError` if `userId` not found in the database.
+ */
 export const unblockUserById = async (userId: string, msgReason?: string) => {
   const affectedRow = await userSequelize.update({ status: UserStatus.Active, reason: msgReason }, { where: { id: userId } });
   if (affectedRow[0] === 1) return affectedRow;
