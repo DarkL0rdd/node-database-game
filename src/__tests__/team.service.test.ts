@@ -1,5 +1,5 @@
 import { sequelize } from "../sequelize";
-import { deletePlayerFromTeamById, getInfoAllTeams, getInfoTeamById } from "../services/team.service";
+import { addPlayerInTeam, deletePlayerFromTeamById, getInfoAllTeams, getInfoTeamById } from "../services/team.service";
 
 describe("Function getInfoAllTeams:", () => {
   test("Should find teams in db.", async () => {
@@ -67,6 +67,45 @@ describe("Function deletePlayerFromTeamById:", () => {
       };
     }
     expect(errObj).toEqual({ status: 500, message: "Error removing a player from the team." });
+  });
+});
+
+describe("Function addPlayerInTeam:", () => {
+  test("Should add player in team.", async () => {
+    const teamName = "Stun Seed";
+    const userId = "3";
+    const returnValue = await addPlayerInTeam(teamName, userId);
+    expect(returnValue).toEqual([1]);
+  });
+
+  test("Should throw error if team not found.", async () => {
+    const wrongTeamName = "999";
+    const userId = "3";
+    let errObj = undefined;
+    try {
+      const returnValue = await addPlayerInTeam(wrongTeamName, userId);
+    } catch (err) {
+      errObj = {
+        status: err.status,
+        message: err.message,
+      };
+    }
+    expect(errObj).toEqual({ status: 404, message: "Team not found." });
+  });
+
+  test("Should throw error if player not found.", async () => {
+    const teamName = "Stun Seed";
+    const wrongUserId = "999";
+    let errObj = undefined;
+    try {
+      const returnValue = await addPlayerInTeam(teamName, wrongUserId);
+    } catch (err) {
+      errObj = {
+        status: err.status,
+        message: err.message,
+      };
+    }
+    expect(errObj).toEqual({ status: 500, message: "Error adding a player to the team." });
   });
 });
 
