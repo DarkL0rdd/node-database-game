@@ -41,6 +41,8 @@ userRouter.post(
   "/profile/change-info",
   authenticateAccessToken,
   checkRole(UserRole.Admin, UserRole.Manager, UserRole.Player),
+  changeUserProfileSchema,
+  validateRequestSchema,
   updateInfoUserProfile
 );
 
