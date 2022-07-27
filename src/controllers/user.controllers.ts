@@ -119,7 +119,7 @@ export const showInfoUserProfile = async (req: Request, res: Response, next: Nex
 
 export const updateInfoUserProfile = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await changeInfoUserProfile(req.user.reqEmail, req.body.first_name, req.body.second_name, req.body.email, req.body.password);
+    await changeInfoUserProfile(req.user.reqEmail, req.body);
     res.status(200).json({ Message: "Successful update info user." });
   } catch (err) {
     next(err);
