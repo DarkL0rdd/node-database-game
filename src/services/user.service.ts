@@ -52,42 +52,23 @@ export const getInfoUserProfile = async (userEmail: string) => {
 /**
  * Updates user's personal data in the database.
  * @param userEmail User's email.
- * @param newFirstName User's new first name.
- * @param newSecondName User's new second name.
- * @param newUserEmail User's new email.
- * @param newPassword User's new password.
+ * @param newUserInfoObj New user's data.
  * @returns Promise an array of one element. The first element is the number of affected rows.
  */
-export const changeInfoUserProfile = async (
-  userEmail: string,
-  newFirstName: string,
-  newSecondName: string,
-  newUserEmail: string,
-  newPassword: string
-) => {
-  if (!userEmail) throw new CustomError(500, "User email is empty.");
-  const user = await userSequelize.findOne({
-    where: { email: userEmail },
-  });
-  if (!user) throw new Error("User not found.");
-  if (!newFirstName) newFirstName = user.first_name;
-  if (!newSecondName) newSecondName = user.second_name;
-  if (!newUserEmail) newUserEmail = user.email;
-  let hashPassword = undefined;
-  if (!newPassword) {
-    newPassword = user.password;
-  } else {
-    hashPassword = await hashUserPassword(newPassword, 8);
+export const changeInfoUserProfile = async (userEmail: string, newUserInfoObj: any) => {
+  if (!userEmail) throw new CustomError(401, "User email is empty.");
+  let userInfoObj: any = {};
+  for (const key in newUserInfoObj) {
+    if (newUserInfoObj[key]) {
+      userInfoObj[key] = newUserInfoObj[key];
+    }
   }
-  const affectedRow = await userSequelize.update(
-    {
-      first_name: newFirstName,
-      second_name: newSecondName,
-      email: newUserEmail,
-      password: hashPassword,
-    },
-    { where: { email: userEmail } }
-  );
+  console.log(userInfoObj);
+  if (userInfoObj.password) {
+    const hashPassword = await hashUserPassword(newUserInfoObj.password, 8);
+    userInfoObj.password = hashPassword;
+  }
+  const affectedRow = await userSequelize.update(userInfoObj, { where: { email: userEmail } });
   if (affectedRow[0] === 1) return affectedRow;
   throw new CustomError(500, "Error change user profile.");
 };
