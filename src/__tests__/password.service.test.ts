@@ -4,7 +4,7 @@ import { compareUserPassword, hashUserPassword, saveNewUserPassword } from "../s
 
 describe("Function hashUserPassword:", () => {
   test("Should hash user's password.", async () => {
-    const userPassword = "password";
+    const userPassword = "correct_password";
     const salRounds = 8;
     const hashedPassword = await hashUserPassword(userPassword, salRounds);
     const hashCompare: boolean = bcrypt.compareSync(userPassword, hashedPassword);
@@ -14,8 +14,8 @@ describe("Function hashUserPassword:", () => {
 
 describe("Function compareUserPassword:", () => {
   test("Should throw error if user's email is wrong.", async () => {
-    const wrongEmail = "I_DON'T_EXIST@gmail.com";
-    const password = "test6";
+    const wrongEmail = "wrong_email@gmail.com";
+    const password = "wrong_password";
     let errObj = undefined;
     try {
       await compareUserPassword(wrongEmail, password);
@@ -29,11 +29,11 @@ describe("Function compareUserPassword:", () => {
   });
 
   test("Should throw error if user's password is wrong.", async () => {
-    const email = "test6@gmail.com";
-    const wrongPassword = "test";
+    const correctEmail = "test2@gmail.com";
+    const wrongPassword = "wrong_password";
     let errObj = undefined;
     try {
-      await compareUserPassword(email, wrongPassword);
+      await compareUserPassword(correctEmail, wrongPassword);
     } catch (err) {
       errObj = {
         status: err.status,
@@ -48,8 +48,8 @@ describe("Function compareUserPassword:", () => {
 
 describe("Function saveNewUserPassword:", () => {
   test("Should throw error if user's email is wrong.", async () => {
-    const wrongEmail = "I_DON'T_EXIST@gmail.com";
-    const password = "test6";
+    const wrongEmail = "wrong_email@gmail.com";
+    const password = "random_password";
     let errObj = undefined;
     try {
       await saveNewUserPassword(password, wrongEmail);
@@ -64,7 +64,7 @@ describe("Function saveNewUserPassword:", () => {
 
   test("Should save new user's password in db.", async () => {
     const email = "test2@gmail.com";
-    const password = "test2";
+    const password = "testtest2";
     const savePass = await saveNewUserPassword(password, email);
     expect(savePass).toEqual([1]);
   });

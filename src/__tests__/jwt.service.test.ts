@@ -12,8 +12,8 @@ import jwt from "jsonwebtoken";
 describe("Function generateAccessToken:", () => {
   test("Should generate access token.", async () => {
     const email = "email@gmail.com";
-    const timeAccesssToken = "1h";
-    const accessToken = await generateAccessToken(email, timeAccesssToken);
+    const timeAccessToken = "1h";
+    const accessToken = await generateAccessToken(email, timeAccessToken);
     const decodedAccessInfo = jwt.decode(accessToken);
     const verifyAccessToken = jwt.verify(accessToken, `${process.env.ACCESS_SECRET_KEY}`);
     expect(decodedAccessInfo).toStrictEqual(verifyAccessToken);

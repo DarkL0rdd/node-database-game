@@ -30,8 +30,8 @@ import {
 
 describe("Function getInfoUserProfile:", () => {
   test("Should find user in db and show his info.", async () => {
-    const userEmail = "test6@gmail.com";
-    const userInfo = await getInfoUserProfile(userEmail);
+    const correctUserEmail = "test2@gmail.com";
+    const userInfo = await getInfoUserProfile(correctUserEmail);
     const objUser = {
       first_name: userInfo.first_name,
       role: { role_name: userInfo.role.role_name },
@@ -39,18 +39,18 @@ describe("Function getInfoUserProfile:", () => {
       email: userInfo.email,
     };
     expect(objUser).toEqual({
-      first_name: "test6",
-      second_name: "test6",
-      email: "test6@gmail.com",
+      first_name: "Test2",
+      second_name: "Test2",
+      email: "test2@gmail.com",
       role: { role_name: "Player" },
     });
   });
 
   test("Should throw error if user email is not found in db.", async () => {
-    const userEmail = "test255@gmail.com";
+    const wrongUserEmail = "wrong_user_email@gmail.com";
     let errObj = undefined;
     try {
-      const userInfo = await getInfoUserProfile(userEmail);
+      const userInfo = await getInfoUserProfile(wrongUserEmail);
     } catch (err) {
       errObj = {
         status: err.status,
@@ -93,7 +93,7 @@ describe("Function getInfoAllUsersByRole:", () => {
   });
 
   test("Should throw error if users are not found in db.", async () => {
-    const wrongRoleName = "NOT_Player";
+    const wrongRoleName = "wrong_role_name";
     let errObj = undefined;
     try {
       const usersInfo = await getInfoAllUsersByRole(wrongRoleName);
@@ -139,10 +139,10 @@ describe("Function getInfoOneUserByRoleAndId:", () => {
 
   test("Should throw error if user is not found in db.", async () => {
     const roleName = "Player";
-    const userId = "255";
+    const wrongUserId = "255";
     let errObj = undefined;
     try {
-      const userInfo = await getInfoOneUserByRoleAndId(roleName, userId);
+      const userInfo = await getInfoOneUserByRoleAndId(roleName, wrongUserId);
     } catch (err) {
       errObj = {
         status: err.status,
@@ -155,18 +155,16 @@ describe("Function getInfoOneUserByRoleAndId:", () => {
 
 describe("Function blockUserById:", () => {
   test("Should block user in db.", async () => {
-    const role = "Player";
     const userId = "3";
     const affectedRow = await blockUserById(userId);
     expect(affectedRow[0]).toBeGreaterThan(0);
   });
 
   test("Should throw error if user is not found in db.", async () => {
-    const role = "Player";
-    const userId = "255";
+    const wrongUserId = "255";
     let errObj = undefined;
     try {
-      const affectedRow = await blockUserById(userId);
+      const affectedRow = await blockUserById(wrongUserId);
     } catch (err) {
       errObj = {
         status: err.status,
@@ -179,14 +177,12 @@ describe("Function blockUserById:", () => {
 
 describe("Function unblockUserById:", () => {
   test("Should block user in db.", async () => {
-    const role = "Player";
     const userId = "3";
     const affectedRow = await unblockUserById(userId);
     expect(affectedRow[0]).toBeGreaterThan(0);
   });
 
   test("Should throw error if user is not found in db.", async () => {
-    const role = "Player";
     const userId = "255";
     let errObj = undefined;
     try {

@@ -66,7 +66,7 @@ describe("Function deletePlayerFromTeamById:", () => {
         message: err.message,
       };
     }
-    expect(errObj).toEqual({ status: 500, message: "Error delete player from team." });
+    expect(errObj).toEqual({ status: 500, message: "Error removing a player from the team." });
   });
 });
 
