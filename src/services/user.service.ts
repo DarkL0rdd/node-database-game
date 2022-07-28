@@ -8,25 +8,28 @@ import { HashRound, UserRole, UserStatus } from "./all.enums";
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
 
+interface UserInfo {
+  first_name: string;
+  second_name: string;
+  email: string;
+  password: string;
+}
+
 /**
  * Create new user in the database.
- * @param reqFirstName User's first name.
- * @param reqSecondName User's second name.
- * @param reqEmail User's email.
- * @param reqPassword User's password.
+ * @param userInfoObj User's data with `first_name`, `second_name`, `email`, `password`.
  * @returns Promise with new `User`.
  * @throws `CustomError` if `rolePlayer` not found in database or required fields are empty.
  */
-export const createUser = async (reqFirstName: string, reqSecondName: string, reqEmail: string, reqPassword: string) => {
-  if (!reqFirstName || !reqSecondName || !reqEmail || !reqPassword) throw new CustomError(400, "Required fields are empty.");
+export const createUser = async (userInfoObj: UserInfo) => {
   const rolePlayer = await roleSequelize.findOne({ where: { role_name: UserRole.Player } });
   if (!rolePlayer) throw new CustomError(500, "User registration error.");
-  const hashPassword = await hashUserPassword(reqPassword, HashRound.EightRound);
+  const hashPassword = await hashUserPassword(userInfoObj.password, HashRound.EightRound);
   return await userSequelize.create({
-    first_name: reqFirstName,
+    first_name: userInfoObj.first_name,
     role_id: rolePlayer.id,
-    second_name: reqSecondName,
-    email: reqEmail,
+    second_name: userInfoObj.second_name,
+    email: userInfoObj.email,
     password: hashPassword,
     status: UserStatus.Active,
   });
@@ -48,22 +51,20 @@ export const getInfoUserProfile = async (userEmail: string) => {
   return userInfo;
 };
 
-//!
 /**
  * Updates user's personal data in the database.
  * @param userEmail User's email.
- * @param newUserInfoObj New user's data.
+ * @param newUserInfoObj New user's data with `first_name`, `second_name`, `email`, `password`.
  * @returns Promise an array of one element. The first element is the number of affected rows.
  */
-export const changeInfoUserProfile = async (userEmail: string, newUserInfoObj: any) => {
+export const changeInfoUserProfile = async (userEmail: string, newUserInfoObj: UserInfo) => {
   if (!userEmail) throw new CustomError(401, "User email is empty.");
   let userInfoObj: any = {};
   for (const key in newUserInfoObj) {
-    if (newUserInfoObj[key]) {
-      userInfoObj[key] = newUserInfoObj[key];
+    if (newUserInfoObj[key as keyof UserInfo]) {
+      userInfoObj[key] = newUserInfoObj[key as keyof UserInfo];
     }
   }
-  console.log(userInfoObj);
   if (userInfoObj.password) {
     const hashPassword = await hashUserPassword(newUserInfoObj.password, 8);
     userInfoObj.password = hashPassword;
