@@ -23,12 +23,12 @@ module.exports = {
         allowNull: true,
       },
       first_name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
       },
       second_name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING,
         allowNull: false,
         notEmpty: true,
       },

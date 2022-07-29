@@ -80,14 +80,14 @@ export class User extends Model<User, UserAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.STRING,
   })
   first_name: string;
 
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING(50),
+    type: DataType.STRING,
   })
   second_name: string;
 

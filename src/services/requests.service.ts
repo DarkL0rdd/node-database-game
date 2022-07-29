@@ -47,7 +47,6 @@ export const createUserRequest = async (
     });
     if (!team) throw new CustomError(404, "Team not found.");
   }
-
   return await requestSequelize.create({
     user_id: user.id,
     request_type: typeRequest,
