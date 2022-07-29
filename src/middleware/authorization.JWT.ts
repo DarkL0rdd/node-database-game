@@ -1,23 +1,24 @@
 import { Request, Response, NextFunction } from "express";
-import { CustomError } from "../services/error.service";
-import { generateAccessToken, generateRefreshToken, verifyAccessToken, verifyRefreshToken } from "../services/jwt.service";
+import { verifyAccessToken, verifyRefreshToken } from "../services/jwt.service";
 
+/**
+ * JWT access token authentication middleware. Verify JWT access token, set user payload to request and calls next middleware.
+ * @param req Express request object.
+ * @param res Express response object.
+ * @param next Express next function.
+ */
 export const authenticateAccessToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const refreshToken = req.cookies["refresh-token"];
-    if (!refreshToken) return res.status(401).send("Unauthorized.");
-
-    const refreshPayload = await verifyRefreshToken(refreshToken);
-    if (!refreshPayload) return res.status(401).send("Unauthorized.");
-
     const authorizationHeader = req.headers.authorization;
-    if (!authorizationHeader) return res.status(401).send("Unauthorized.");
+    const refreshToken = req.cookies["refresh-token"];
+
+    if (!authorizationHeader || !refreshToken) return res.status(401).json({ Message: "Unauthorized." });
 
     const token = authorizationHeader.split(" ")[1];
     const accessPayload = await verifyAccessToken(token);
+
     if (!accessPayload) {
-      console.log("userPayload", accessPayload);
-      console.log("MiddlewareJWT - userPayload is undefined");
+      console.log("MiddlewareJWT - userPayload is: ", accessPayload);
       res.redirect(307, "/user/refresh");
     } else {
       req.user = accessPayload;
@@ -25,5 +26,23 @@ export const authenticateAccessToken = async (req: Request, res: Response, next:
     }
   } catch (err) {
     console.log(err);
+  }
+};
+
+/**
+ * JWT refresh token authentication middleware. Verify JWT refresh token and calls next middleware.
+ * @param req Express request object.
+ * @param res  Express response object.
+ * @param next Express next function.
+ */
+export const authenticateRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log("You are in authenticateRefreshToken");
+    const refreshTokenCookie = req.cookies["refresh-token"];
+    const refreshPayload = await verifyRefreshToken(refreshTokenCookie);
+    if (refreshPayload) next();
+  } catch (err) {
+    console.log(err);
+    res.status(err.status).json({ Message: err.message });
   }
 };

@@ -24,7 +24,7 @@ export interface UserAttributes {
   id?: number;
   role_id: number;
   role?: Role;
-  team_id?: number;
+  team_id?: number | null;
   team?: Team;
   first_name: string;
   second_name: string;
@@ -32,7 +32,7 @@ export interface UserAttributes {
   password: string;
   status: string;
   reason?: string;
-  refresh_token?: string;
+  refresh_token?: string | null;
 }
 
 @Table({
@@ -72,7 +72,7 @@ export class User extends Model<User, UserAttributes> {
   @Column({
     type: DataType.INTEGER,
   })
-  team_id?: number;
+  team_id?: number | null;
 
   @BelongsTo(() => Team, "team_id")
   team: Team;
@@ -96,35 +96,35 @@ export class User extends Model<User, UserAttributes> {
   @NotEmpty
   @IsEmail
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(254),
   })
   email: string;
 
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(1000),
   })
   password: string;
 
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
   })
   status: string;
 
   @AllowNull(true)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(254),
   })
   reason?: string;
 
   @AllowNull(true)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(2000),
   })
-  refresh_token?: string;
+  refresh_token?: string | null;
 
   @CreatedAt
   createdAt: Date;

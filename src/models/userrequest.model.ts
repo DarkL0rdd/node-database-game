@@ -57,7 +57,7 @@ export class UserRequest extends Model<UserRequest, UserRequestAttributes> {
 
   @AllowNull(false)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(254),
   })
   request_type: string;
 
@@ -69,13 +69,13 @@ export class UserRequest extends Model<UserRequest, UserRequestAttributes> {
 
   @AllowNull(true)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(254),
   })
   description: string;
 
   @AllowNull(false)
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
   })
   status: string;
 

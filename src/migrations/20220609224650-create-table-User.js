@@ -19,7 +19,7 @@ module.exports = {
         allowNull: false,
       },
       team_id: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER || DataTypes.NULL,
         allowNull: true,
       },
       first_name: {
@@ -33,28 +33,28 @@ module.exports = {
         notEmpty: true,
       },
       email: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(254),
         allowNull: false,
         unique: true,
         notEmpty: true,
         isEmail: true,
       },
       password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1000),
         allowNull: false,
         notEmpty: true,
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: false,
         notEmpty: true,
       },
       reason: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(254),
         allowNull: true,
       },
       refresh_token: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(2000) || DataTypes.NULL,
         allowNull: true,
       },
       createdAt: {

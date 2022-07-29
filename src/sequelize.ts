@@ -9,4 +9,5 @@ export const sequelize = new Sequelize(`${process.env.DB_NAME}`, `${process.env.
   modelMatch: (filename, member) => {
     return filename.substring(0, filename.indexOf(".model")) === member.toLowerCase();
   },
+  omitNull: false,
 });

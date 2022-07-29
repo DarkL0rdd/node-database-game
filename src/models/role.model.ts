@@ -41,7 +41,7 @@ export class Role extends Model<Role, RoleAttributes> {
   @AllowNull(false)
   @NotEmpty
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(100),
   })
   role_name: string;
 

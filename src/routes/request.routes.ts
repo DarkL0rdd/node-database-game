@@ -10,6 +10,8 @@ import {
 } from "../controllers/request.controllers";
 import { authenticateAccessToken } from "../middleware/authorization.JWT";
 import { checkRole } from "../middleware/check.roles";
+import { validateRequestSchema } from "../middleware/validate.request.schema";
+import { userRequestSchema } from "../schema/user.request.schema";
 import { UserRole } from "../services/all.enums";
 
 export const requestRouter: Application = router();
@@ -19,6 +21,8 @@ requestRouter.post(
   "/my-list-requests/new-request",
   authenticateAccessToken,
   checkRole(UserRole.Manager, UserRole.Player),
+  userRequestSchema,
+  validateRequestSchema,
   createNewRequest
 );
 

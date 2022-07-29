@@ -7,6 +7,10 @@ import { CustomError } from "../services/error.service";
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
 
+/**
+ * Checks user role.
+ * @param roles Array of roles.
+ */
 export const checkRole = (...roles: string[]) => {
   const funct = async (req: Request, res: Response, next: NextFunction) => {
     try {

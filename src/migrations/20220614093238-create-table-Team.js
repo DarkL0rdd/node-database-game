@@ -13,7 +13,7 @@ module.exports = {
         notEmpty: true,
       },
       team_name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         unique: true,
         allowNull: false,
         notEmpty: true,

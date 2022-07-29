@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import {
   answerRequest,
   cancelRequestById,
@@ -9,72 +9,65 @@ import {
   getInfoRequestById,
 } from "../services/requests.service";
 
-export const createNewRequest = async (req: Request, res: Response) => {
+export const createNewRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await createUserRequest(req.user.reqEmail, req.body.request_type, req.body.description, req.body.team_name);
     res.status(200).json({ Message: "Successful create new request." });
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };
 
-export const showAllRequests = async (req: Request, res: Response) => {
+export const showAllRequests = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const requests = await getInfoAllRequests();
     res.status(200).json(requests);
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };
 
-export const showRequestById = async (req: Request, res: Response) => {
+export const showRequestById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const request = await getInfoRequestById(req.params.id);
     return res.status(200).json(request);
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };
 
-export const showOwnRequests = async (req: Request, res: Response) => {
+export const showOwnRequests = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const requests = await getInfoOwnRequests(req.user.reqEmail);
     res.status(200).json(requests);
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };
 
-export const showOwnRequestById = async (req: Request, res: Response) => {
+export const showOwnRequestById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const request = await getInfoOwnRequestById(req.params.id, req.user.reqEmail);
     return res.json(request);
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };
 
-export const cancelRequest = async (req: Request, res: Response) => {
+export const cancelRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await cancelRequestById(req.params.id);
     res.status(200).json({ Message: "Successful cancel request." });
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };
 
-export const answerToRequest = async (req: Request, res: Response) => {
+export const answerToRequest = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await answerRequest(req.params.id, req.body.answer, req.body.team_name);
+    await answerRequest(req.params.id, req.body.answer, req.body.team_name, req.body.user_id);
     return res.status(200).json({ Message: "Successful answer to request." });
   } catch (err) {
-    console.log(err);
-    res.status(err.status).json({ Message: err.message });
+    next(err);
   }
 };

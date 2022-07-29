@@ -19,7 +19,7 @@ module.exports = {
         isInt: true,
       },
       request_type: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(254),
         allowNull: false,
       },
       team_id: {
@@ -27,11 +27,11 @@ module.exports = {
         allowNull: true,
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(254),
         allowNull: true,
       },
       status: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
       createdAt: {
