@@ -25,7 +25,7 @@ export const createUser = async (userInfoObj: UserInfo) => {
   const rolePlayer = await roleSequelize.findOne({ where: { role_name: UserRole.Player } });
   if (!rolePlayer) throw new CustomError(500, "User registration error.");
   const hashPassword = await hashUserPassword(userInfoObj.password, HashRound.EightRound);
-  return await userSequelize.create({
+  const newUser = await userSequelize.create({
     first_name: userInfoObj.first_name,
     role_id: rolePlayer.id,
     second_name: userInfoObj.second_name,
@@ -33,6 +33,8 @@ export const createUser = async (userInfoObj: UserInfo) => {
     password: hashPassword,
     status: UserStatus.Active,
   });
+  if (!newUser) throw new CustomError(500, "User registration error.");
+  return newUser;
 };
 
 /**

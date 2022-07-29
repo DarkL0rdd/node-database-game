@@ -1,3 +1,4 @@
+import { User } from "../models/user.model";
 import { sequelize } from "../sequelize";
 import {
   blockUserById,
@@ -8,25 +9,27 @@ import {
   unblockUserById,
 } from "../services/user.service";
 
-/*describe("Function createUser:", () => {
+describe("Function createUser:", () => {
   test("Should create new user in db.", async () => {
-    const firstName = "NewFirstName";
-    const role_id = 3;
-    const secondName = "NewSecondName";
-    const email = "newemail@gmail.com";
-    const password = "newpassworD123@";
-    const status = "Active";
-    const newUser = await createUser(firstName, secondName, email, password);
+    const userObj = {
+      first_name: "NewFirstName",
+      role_id: 3,
+      second_name: "NewSecondName",
+      email: "new_email@gmail.com",
+      password: "new_password",
+      status: "Active",
+    };
+    const newUser = await createUser(userObj);
     expect(newUser).toMatchObject({
-      first_name: firstName,
-      role_id: role_id,
-      second_name: secondName,
-      email: email,
+      first_name: userObj.first_name,
+      role_id: userObj.role_id,
+      second_name: userObj.second_name,
+      email: userObj.email,
       password: newUser.password,
-      status: status,
+      status: userObj.status,
     });
   });
-});*/
+});
 
 describe("Function getInfoUserProfile:", () => {
   test("Should find user in db and show his info.", async () => {
@@ -197,7 +200,21 @@ describe("Function unblockUserById:", () => {
   });
 });
 
+const userSequelize = sequelize.getRepository(User);
+
 afterAll((done) => {
-  sequelize.close();
-  done();
+  userSequelize
+    .destroy({
+      where: {
+        first_name: "NewFirstName",
+        second_name: "NewSecondName",
+        email: "new_email@gmail.com",
+      },
+    })
+    .then(() => {
+      sequelize.close();
+      done();
+    });
 });
+//sequelize.close();
+//done()
