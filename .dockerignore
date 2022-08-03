@@ -1,0 +1,11 @@
+.git
+.gitignore
+READMe.md
+Dockerfile
+docker-compose.yml
+node_modules
+coverage
+__tests__
+html
+jest.confsg.ts
+node-game.postman_collection.json

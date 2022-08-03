@@ -20,7 +20,7 @@ const io = new Server(httpServer, {
     maxAge: 3600,
   },
 });
-const PORT: string | undefined = process.env.SERVER_PORT;
+const PORT: string | undefined = process.env.SERVER_PORT ?? "3000";
 
 app.use(express.json());
 app.use(cookieParser());
