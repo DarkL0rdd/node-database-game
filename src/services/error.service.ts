@@ -5,7 +5,4 @@ export class CustomError extends Error {
     this.status = status;
     Object.setPrototypeOf(this, CustomError.prototype);
   }
-  getErrorMessage() {
-    return "Something went wrong: " + this.message;
-  }
 }

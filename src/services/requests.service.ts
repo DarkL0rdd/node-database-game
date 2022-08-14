@@ -6,6 +6,7 @@ import { Team } from "../models/team.model";
 import { RequestType, RequestStatus, UserRole } from "./all.enums";
 import { CustomError } from "./error.service";
 import { addPlayerInTeam, deletePlayerFromTeamById } from "./team.service";
+import { unblockUserById } from "./user.service";
 
 const userSequelize = sequelize.getRepository(User);
 const roleSequelize = sequelize.getRepository(Role);
@@ -183,11 +184,23 @@ const answerJoinToTeam = async (answer: string, requestId: UserRequest, teamName
   }
 };
 
+const answerUnblockUser = async (answer: string, requestId: UserRequest) => {
+  if (answer === RequestStatus.Approved) {
+    await unblockUserById(String(requestId.user_id));
+    await requestSequelize.update({ status: RequestStatus.Approved }, { where: { id: requestId.id } });
+  } else if (answer === RequestStatus.Declined) {
+    await requestSequelize.update({ status: RequestStatus.Declined }, { where: { id: requestId.id } });
+  } else {
+    throw new CustomError(500, "Answer error.");
+  }
+};
+
 const objRequestTypes: any = {
   [RequestType.BecomeManager]: answerBecomeManager,
   [RequestType.ExitFromTeam]: answerExitFromTeam,
   [RequestType.JoinToTeam]: answerJoinToTeam,
   [RequestType.ChangeTeam]: answerJoinToTeam,
+  [RequestType.UnbanProfile]: answerUnblockUser,
 } as const;
 
 /**
