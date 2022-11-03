@@ -10,7 +10,7 @@
 			"name": "User",
 			"item": [
 				{
-					"name": "Register",
+					"name": "Registering a user account",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -39,7 +39,7 @@
 					"response": []
 				},
 				{
-					"name": "Login",
+					"name": "Logging in the user account",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -74,7 +74,7 @@
 					"response": []
 				},
 				{
-					"name": "Logout",
+					"name": "Logging out of a user account",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -100,7 +100,7 @@
 					"response": []
 				},
 				{
-					"name": "Forgot pass",
+					"name": "User password recovery(enter email)",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -129,7 +129,7 @@
 					"response": []
 				},
 				{
-					"name": "Reset pass",
+					"name": "Changing the user password",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -159,7 +159,7 @@
 					"response": []
 				},
 				{
-					"name": "Show user-profile-info",
+					"name": "Displaying the user information",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -197,7 +197,7 @@
 					"response": []
 				},
 				{
-					"name": "Change user-profile-info",
+					"name": "Changing the user information",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -321,7 +321,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin: Ban manager or player by ID A",
+					"name": "Admin: Ban manager/player by ID A",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -341,7 +341,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/user/list-users/:id/ban?role",
+							"raw": "http://localhost:3000/user/list-users/:id/ban",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -352,12 +352,6 @@
 								"list-users",
 								":id",
 								"ban"
-							],
-							"query": [
-								{
-									"key": "role",
-									"value": null
-								}
 							],
 							"variable": [
 								{
@@ -370,7 +364,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin: Unban manager or player by ID A",
+					"name": "Admin: Unban manager/player by ID A",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -390,7 +384,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3000/user/list-users/:id/unban?role",
+							"raw": "http://localhost:3000/user/list-users/:id/unban",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -401,12 +395,6 @@
 								"list-users",
 								":id",
 								"unban"
-							],
-							"query": [
-								{
-									"key": "role",
-									"value": null
-								}
 							],
 							"variable": [
 								{
@@ -478,7 +466,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin, Manager: Answer to request A",
+					"name": "Admin, Manager: Answer to manager's/player's request",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -580,7 +568,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin, Manager: Delete player from team A",
+					"name": "Admin, Manager: Delete manager/player from team A",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -628,7 +616,7 @@
 			"name": "Manager",
 			"item": [
 				{
-					"name": "All: Show list of admins or managers or players M",
+					"name": "All: Show list of admins/managers/players M",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -660,7 +648,7 @@
 					"response": []
 				},
 				{
-					"name": "All: Show one admin or manager or player by ID M",
+					"name": "All: Show one admin/manager/player by ID M",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -711,43 +699,7 @@
 					"response": []
 				},
 				{
-					"name": "Manager, Player: Create new request M",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer ",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"request_type\":\"\",\r\n    \"description\":\"\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3000/request/my-list-requests/new-request",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"request",
-								"my-list-requests",
-								"new-request"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Admin, Manager: Show list of requests(managers or players) M",
+					"name": "Admin, Manager: Show list of requests players M",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -773,7 +725,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin, Manager: Show one requests by ID(manager or player) M",
+					"name": "Admin, Manager: Show one request by player's ID M",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -806,7 +758,7 @@
 					"response": []
 				},
 				{
-					"name": "Manager, Player: Create new request",
+					"name": "Manager, Player: Create OWN new request",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -842,7 +794,7 @@
 					"response": []
 				},
 				{
-					"name": "Manager, Player: Cancel request",
+					"name": "Manager, Player: Cancel OWN request",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -956,7 +908,7 @@
 					"response": []
 				},
 				{
-					"name": "Admin, Manager: Answer to request M",
+					"name": "Admin, Manager: Answer to player's request M",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1106,7 +1058,7 @@
 			"name": "Player",
 			"item": [
 				{
-					"name": "All: Show list of admins or managers or players P",
+					"name": "All: Show list admins/managers/players P",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1138,7 +1090,7 @@
 					"response": []
 				},
 				{
-					"name": "All: Show one admin or manager or player by ID P",
+					"name": "All: Show one admin/manager/player by ID P",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1189,7 +1141,7 @@
 					"response": []
 				},
 				{
-					"name": "Manager, Player: Create new request",
+					"name": "Manager, Player: Create OWN new request",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -1225,7 +1177,7 @@
 					"response": []
 				},
 				{
-					"name": "Manager, Player: Cancel request",
+					"name": "Manager, Player: Cancel OWN request by ID",
 					"request": {
 						"method": "POST",
 						"header": [
