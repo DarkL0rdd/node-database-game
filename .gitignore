@@ -1,9 +1,4 @@
 /node_modules
 /dist
 .env
-index.test.html
-forgot_password.html
-reset_password.html
-login.html
-registration.html
 /coverage
